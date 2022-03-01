@@ -1,0 +1,73 @@
+.closedNavBar {
+  right: 0;
+  position: fixed;
+  z-index: 400;
+  border-radius: 5px
+}
+
+.openNavBar {
+  right: 0;
+  position: fixed;
+  z-index: 400;
+  border-radius: 5px;
+}
+
+.fixedPanel {
+  box-shadow: -4px 4px 5px grey;
+  width: inherit;
+  height: 475px;
+  background-color: white;
+  position: absolute;
+  right: 0;
+  left: 40px;
+  border: lightgrey 1px solid;
+  z-index: 400;
+  overflow: auto;
+}
+
+.fixedPanelHidden {
+  box-shadow: none;
+  width: 0;
+  height: 0;
+  z-index: 400;
+}
+
+.wrappedPanelDiv {
+  width: inherit;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.iconBasic {
+  right: -5px;
+  border-radius: 0;
+  position: absolute;
+  width: 40px;
+}
+
+.iconFixedRight {
+  border: #d3d3d3 1px solid;
+}
+
+.iconSelected {
+  border-right: white 1px solid;
+  border-left: lightgrey 1px solid;
+  border-top: lightgrey 1px solid;
+  border-bottom: lightgrey 1px solid;
+  border-radius: 0;
+  margin-right: -4px;
+  left: 1px;
+  background-color: white;
+  z-index: 401;
+}
+
+.iconNotSelected {
+  left: 1px;
+  border: #d3d3d3 1px solid;
+  border-radius: 0;
+  z-index: 399;
+}
+
+fixed-nav-panel button {
+  outline: none!important;
+}

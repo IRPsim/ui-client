@@ -1,0 +1,318 @@
+<!-- Mehrfachauswahl Simulationen/Jahre -->
+<div>
+    <!-- Auswahl der Simulation -->
+    <form class="form-horizontal" ng-init="vm.getSimulations()">
+        <div class="form-group">
+            <label class="col-sm-1 control-label">Simulation</label>
+            <div class="col-sm-11">
+                <tags-input class="bootstrap"
+                            ng-model="vm.selSimulations"
+                            placeholder="Simulation"
+                            key-property="id"
+                            display-property="tagLabel"
+                            on-tag-removed="vm.onTagRemovedSimulation($tag)"
+                            add-from-autocomplete-only="true"
+                            replace-spaces-with-dashes="false">
+                    <auto-complete source="vm.simulations | orderBy: 'label' | filter: $query"
+                                   min-length="0"
+                                   debounce-delay="0"
+                                   load-on-focus="true"
+                                   load-on-empty="true"
+                                   max-results-to-show="150"
+                                   template="my-custom-template"></auto-complete>
+                </tags-input>
+                <script type="text/ng-template" id="my-custom-template">
+                    <div>
+                        <span ng-bind-html="$highlight($getDisplayText())"></span>
+                    </div>
+                </script>
+            </div>
+        </div>
+    </form>
+    <!-- Tab pro Simulation -->
+    <uib-tabset active="active" ng-show="vm.selSimulations.length > 0">
+        <uib-tab ng-hide="vm.errorLoadingSimulationResults[simulation.id]"
+                 index="simulation.id"
+                 select="vm.getSimulationResults(simulation.id)"
+                 ng-repeat="simulation in vm.selSimulations">
+            <uib-tab-heading>
+                <i class="fa fa-cogs"></i> {{simulation.label}} [ID:{{simulation.id}}]
+            </uib-tab-heading>
+            <!-- Spinner Section -->
+            <div class="center-block" ng-show="vm.isLoading" style="height:200px; display: table;">
+                <div class="container" style="display: table-cell; vertical-align: middle;">
+                    <div style="text-align:center;">Aktualisiere Parameterliste für ausgewählte Jahr(e)</div>
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Initial Configurations -->
+            <div ng-show="!vm.isLoading" class="show-gdx-form">
+                <button type="button" class="btn btn-primary" style="margin-top: 10px;" ng-click="vm.takeOver(simulation.id)">
+                    <i class="fa fa-exchange" aria-hidden="true"></i>
+                    Übernahme
+                </button>
+              <button type="button" class="btn btn-primary" style="margin-top: 10px;" ng-click="vm.simulationConfigSave(simulation.id, $event)">
+                <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                Konfiguration speichern
+              </button>
+              <button type="button" class="btn btn-primary" style="margin-top: 10px;" ng-click="vm.simulationConfigLoad(simulation.id, $event)">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                Konfiguration laden
+              </button>
+                <form class="form-horizontal" style="margin-top: 25px;">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Jahr(e)</label>
+                        <div class="col-sm-11">
+                            <tags-input class="bootstrap"
+                                        ng-model="vm.selYears[simulation.id]"
+                                        placeholder="Jahr"
+                                        key-property="id"
+                                        display-property="label"
+                                        on-tag-added="vm.onTagAddedYear(simulation.id, $tag)"
+                                        on-tag-removed="vm.onTagRemovedYear(simulation.id, $tag)"
+                                        replace-spaces-with-dashes="false"
+                                        add-from-autocomplete-only="true">
+                                <auto-complete source="vm.years[simulation.id] | filter: $query"
+                                               min-length="0"
+                                               debounce-delay="0"
+                                               load-on-focus="true"
+                                               load-on-empty="true"
+                                               max-results-to-show="150"></auto-complete>
+                            </tags-input>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">Parameterauswahl</label>
+                        <div class="col-sm-11">
+                            <tags-input class="bootstrap"
+                                        ng-model="vm.selParameters[simulation.id]"
+                                        placeholder="Parameter"
+                                        replace-spaces-with-dashes="false"
+                                        add-from-autocomplete-only="true"
+                                        key-property="id"
+                                        display-property="tagLabel"
+                                        on-tag-removed="vm.onTagRemoved(simulation.id, $tag)"
+                                        ng-disabled="vm.parameters[simulation.id] === 0">
+                                <auto-complete
+                                        source="vm.parameters[simulation.id] | filterParameter: '':vm.selYears[simulation.id] | orderBy: 'tagLabel' | filter: $query"
+                                        min-length="0"
+                                        debounce-delay="0"
+                                        max-results-to-show="150"
+                                        template="select-parameters"></auto-complete>
+                            </tags-input>
+                            <script type="text/ng-template" id="select-parameters">
+                                <div>
+                                    <span ng-bind-html="$highlight($getDisplayText())"></span>
+                                </div>
+                            </script>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Parameter Configuration For Selections -->
+            <div class="gdx-filter-form-hr" ng-show="vm.selParameters[simulation.id].length > 0"></div>
+            <div class="parameter-configuration">
+                <div ng-repeat="p in vm.selParameters[simulation.id] track by p.id"
+                     ng-init="vm.initExportConfiguration(simulation.id, p.year, p.label)">
+                    <div ng-repeat="configParameter in vm.exportConfiguration[simulation.id][p.year][p.label] track by $index"
+                         ng-init="configId=$index">
+                        <div>
+                            <label class="control-label">
+                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                <span>{{configParameter.label}}</span>
+                                <span style="margin: 0 5px 0 5px;">&middot;</span>
+                                <span><i class="fa fa-hashtag" aria-hidden="true"></i> {{$index+1}}</span>
+                                <span style="margin: 0 5px 0 5px;">&middot;</span>
+                                <span><i class="fa fa-calendar-o" aria-hidden="true"></i> {{p.year | yearLabel: vm.selYears[simulation.id]}}</span>
+                                <span style="margin: 0 5px 0 5px;">&middot;</span>
+                                <!-- e.g. "dependencies": [[]] - means that the parameter has only one value. Reset-Btn can be hidden. -->
+                                <a ng-if="vm.parameters[simulation.id][p.year][p.label].dependencies.length > 0 && vm.parameters[simulation.id][p.year][p.label].dependencies[0].length > 0"
+                                   class="btn btn-default btn-sm"
+                                   title="Konfiguration für den Parameter zurücksetzen"
+                                   ng-click="vm.reset(simulation.id, configParameter)">
+                                    <i class="fa fa-repeat fa-flip-horizontal" aria-hidden="true"></i>
+                                    Reset
+                                </a>
+                                <!-- TODO: Button overrides previous parameter -> set_ii different -->
+                                <a ng-if="vm.parameters[simulation.id][p.year][p.label].dependencies.length > 0 && vm.parameters[simulation.id][p.year][p.label].dependencies[0].length > 0"
+                                   class="btn btn-default btn-sm"
+                                   title="Einen Parameter im gesetzten Jahr ein weiteres Mal konfigurieren"
+                                   ng-click="vm.add(simulation.id, p.year, p.label, configParameter)">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                    Neu
+                                </a>
+                                <a class="btn btn-default btn-sm"
+                                   title="Parameter im gesetzten Jahr löschen"
+                                   ng-click="vm.remove(simulation.id, p.year, p.label, configId)">
+                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    Löschen
+                                </a>
+                                <a ng-if="vm.hasKeys(configParameter.sets)"
+                                   class="btn btn-default btn-sm"
+                                   title="Parameter im gesetzten Jahr kombinieren"
+                                   ng-click="vm.combination(simulation.id, p.year, p.label, configId, configParameter)">
+                                    <i class="fa fa-compress" aria-hidden="true"></i>
+                                    Kombination
+                                </a>
+                            </label>
+                            <span ng-if="configParameter.isValid"
+                                  class="pull-right" style="color: green;">
+                <i class="fa fa-check" aria-hidden="true"></i>
+              </span>
+                            <span ng-show="!configParameter.isValid" class="pull-right" style="color: red;">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </span>
+                        </div>
+                        <div ng-if="vm.parameters[simulation.id][p.year][p.label].dependencies.length === 0 && vm.parameters[simulation.id][p.year][p.label].sets.length === 0">
+                            <em>
+                                <span>Parameter hat keine Abhängigkeit.</span>
+                            </em>
+                          <select ng-change="vm.ValidateConfig(simulation.id,p.year,p.label,s,configId)"
+                                  ng-model="configParameter['setIi']">
+                            <option ng-repeat="setIiOption in vm.setIiOptions" value="{{setIiOption}}">
+                              {{setIiOption}}
+                            </option>
+                          </select>
+                        </div>
+                        <div ng-if="vm.parameters[simulation.id][p.year][p.label].dependencies.length === 0 && vm.parameters[simulation.id][p.year][p.label].sets.length !== 0">
+                            <em>
+                                <span>Datenelement enthält keine Daten.</span>
+                            </em>
+                        </div>
+                        <div ng-if="vm.parameters[simulation.id][p.year][p.label].dependencies.length === 1 && vm.parameters[simulation.id][p.year][p.label].dependencies[0].length === 0">
+                            <em>
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                                <span>Parameter besitzt nur einen Wert! Es müssen keine Set-Elemente gesetzt werden.</span>
+                            </em>
+                        </div>
+                        <div ng-if="vm.parameters[simulation.id][p.year][p.label].dependencies.length > 0 && vm.parameters[simulation.id][p.year][p.label].dependencies[0].length > 0">
+                            <div style="margin: 5px 0 10px 0;">
+                                <label style="font-style: italic;">Konfigurationen: Spalte
+                                    {{configParameter.autoFillIndex &lt; (configParameter.combinationCount - 1) ?
+                                    (configParameter.autoFillIndex + 2) : (1)}}</label>
+                                <span title="Konfiguration setzen"
+                                      ng-repeat="d in vm.parameters[simulation.id][p.year][p.label].dependencies"
+                                      class="label label-info"
+                                      style="margin-right:5px; cursor: pointer;"
+                                      ng-click="vm.setParameterConfig(simulation.id,p.year,p.label,d, configId)">{{d.join(' - ')}}</span>
+                            </div>
+                            <table class="table table-condensed">
+                                <tbody>
+                                <tr ng-repeat="s in vm.parameters[simulation.id][p.year][p.label].sets track by $index"
+                                    ng-init="parentIndex = $index">
+                                    <td class="col-sm-3 col-md-3 col-lg-2">{{s}}</td>
+                                    <td ng-repeat="combination in configParameter['sets'][s] track by $index"
+                                        ng-init="innerIndex = $index">
+                                        <select ng-focus="vm.itemsForParameterSet(simulation.id,p.year,p.label,s,configId, innerIndex)"
+                                                ng-change="vm.onChange(simulation.id,p.year,p.label,s,configId, innerIndex, parentIndex)"
+                                                ng-model="configParameter['sets'][s][innerIndex].value">
+                                            <option value="">nicht gesetzt</option>
+                                            <option ng-repeat="item in configParameter['sets'][s][innerIndex].items"
+                                                    value="{{item}}">{{item}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td class="col-sm-3 col-md-3 col-lg-2">set_ii</td>
+                                    <td>
+                                        <select ng-change="vm.ValidateConfig(simulation.id,p.year,p.label,s,configId)"
+                                                ng-model="configParameter['setIi']">
+                                            <option ng-repeat="setIiOption in vm.setIiOptions" value="{{setIiOption}}">
+                                                {{setIiOption}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <!-- Fill columns so that line is present -->
+                                    <td ng-repeat="x in [].constructor(configParameter['combinationCount'] - 1) track by $index"></td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="gdx-filter-hr"></div>
+                    </div>
+                </div>
+            </div>
+
+        </uib-tab>
+    </uib-tabset>
+    <!-- Buttons -->
+    <div style="padding: 10px 0px 10px 0px;" ng-show="(vm.selParameters | countSelectedParameters) > 0">
+        <label class="control-label"><i class="fa fa-info-circle" aria-hidden="true"></i> Zusammenfassung</label>
+        <p>
+            <span class="label label-default">{{vm.selSimulations.length}} Simulation(en)</span>
+            <span class="label label-default">{{vm.selParameters | countSelectedParameters}} Parameter</span>
+            <span class="label label-default">{{vm.exportConfiguration | countConfigurations}} Konfiguration(en)</span>
+        </p>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.download('export')"
+                ng-disabled="vm.isExporting">
+            <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+            Exportieren
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.download('comparison')"
+                ng-disabled="vm.isExporting">
+            <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+            Gegenüberstellung
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.download('comparison-preview')"
+                ng-disabled="vm.isExporting">
+            <i class="fa fa-picture-o" aria-hidden="true"></i>
+            Gegenüberstellung Vorschau
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.download('cost-revenue')"
+                ng-disabled="vm.isExporting">
+            <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+            KostenUmsatz
+        </button>
+        <button type="button"
+                class="btn btn-primary"
+                ng-click="vm.download('cost-revenue-preview')"
+                ng-disabled="vm.isExporting">
+            <i class="fa fa-picture-o" aria-hidden="true"></i>
+            KostenUmsatz Vorschau
+        </button>
+        <div ng-if="vm.image !== null">
+            <img ng-src="{{vm.image}}">
+        </div>
+    </div>
+</div>
+<div ng-if="false" class="debug">
+    <!--<h6>Parameters</h6>-->
+    <!--<pre>{{vm.parameters|json}}</pre>-->
+    <h6>Active Tab</h6>
+    <pre>{{active|json}}</pre>
+    <h6>Count Selected Parameters</h6>
+    <pre>{{vm.selParameters | countSelectedParameters}}</pre>
+    <h6>Konfigurationen</h6>
+    <pre>{{vm.exportConfiguration | countConfigurations}}</pre>
+    <h6>Konfigurationen für Skalar</h6>
+    <pre>{{vm.exportConfiguration | countConfigurations:'scalar'}}</pre>
+    <h6>Konfigurationen für Zeitreihe</h6>
+    <pre>{{vm.exportConfiguration | countConfigurations:'timeseries'}}</pre>
+    <h6>Simulations</h6>
+    <pre>{{vm.selSimulations|json}}</pre>
+    <h6>Jahr</h6>
+    <pre>{{vm.years|json}}</pre>
+    <h6>Selected Year</h6>
+    <pre>{{vm.selYears |json}}</pre>
+    <h6>Selected Parameters</h6>
+    <pre>{{vm.selParameters | json}}</pre>
+    <h6>ExportConfiguration</h6>
+    <pre>{{vm.exportConfiguration | json}}</pre>
+</div>

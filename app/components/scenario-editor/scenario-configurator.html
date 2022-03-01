@@ -1,0 +1,104 @@
+<scenario-printer ng-if="print"
+                  scenario="multiYearScenario"
+                  tag="{{tag}}"
+                  ui-structure="uiStructure"
+                  type="{{type}}"
+                  print="print"></scenario-printer>
+<fixed-nav-right class="hidden-print" print="false" top="100px">
+  <fixed-nav-panel icon="glyphicon glyphicon-pushpin"
+                   height="80vh"
+                   title="Ausgewählte Ansicht"
+                   destroy="true">
+    <hierarchy-element selected-element="pinnedElement"
+                       scenario="pinnedScenario">
+    </hierarchy-element>
+  </fixed-nav-panel>
+</fixed-nav-right>
+
+<div class="row" ng-if="!print">
+  <div class="col-sm-3 col-md-3 col-lg-3">
+    <div class="row">
+      <div class="btn-toolbar col-md-12">
+        <div class="btn-group">
+          <button class="btn btn-default glyphicon glyphicon-filter"
+                  title="Filter"
+                  ng-click="toggleShowFilters()"
+                  ng-if="uiStructure"></button>
+          <button class="btn btn-default glyphicon glyphicon-resize-full"
+                  title="Alles ausklappen"
+                  ng-click="treeControl.expand_all()"
+                  ng-if="uiStructure"></button>
+          <button class="btn btn-default glyphicon glyphicon-resize-small"
+                  title="Alles einklappen"
+                  ng-click="treeControl.collapse_all()"
+                  ng-if="uiStructure"></button>
+          <download data-function="saveScenarioToFile()"
+                    title="Speichern"
+                    class="glyphicon glyphicon-floppy-save"
+                    content-type="application/json"
+                    filename="{{ type+'-'+tag+'.json' }}"
+                    ng-if="uiStructure">
+          </download>
+          <button class="btn btn-default btn-file glyphicon glyphicon-floppy-open"
+                  title="Laden">
+            <input  type="file" on-read-file="loadFile($fileContent)">
+          </button>
+          <button class="btn btn-default glyphicon glyphicon-plus"
+                  title="Neues Stützjahr"
+                  ng-click="addDeltaYear()"
+                  ng-if="!readOnly">
+          </button>
+          <button class="btn btn-default glyphicon glyphicon-remove"
+                  title="Stützjahr löschen"
+                  ng-click="deleteYear()"
+                  ng-if="!readOnly"
+                  ng-disabled="multiYearScenario.years.length == 1">
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row" ng-if="showFilters">
+      <div class="col-md-12">
+        <tags-input ng-model="selectedTags"
+                    class="ade-tag-input"
+                    min-length="1"
+                    replace-spaces-with-dashes="false"
+                    tabindex="1"
+                    enable-editing-last-tag="true"
+                    placeholder="Bitte wählen Sie passende Filter aus."
+                    add-from-autocomplete-only="false"
+                    on-tag-added="tagSelectionChanged()"
+                    on-tag-removed="tagSelectionChanged()">
+          <auto-complete source="query($query)"
+                         min-length="1"
+                         load-on-empty="true"
+                         load-on-focus="true"></auto-complete>
+        </tags-input>
+      </div>
+    </div>
+    <div class="row">
+      <abn-tree tree-data="uiStructure"
+                tree-control="treeControl"
+                on-select="onSelect(branch)"
+                expand-level="1"
+                icon-expand = "fa fa-folder"
+                icon-collapse = "fa fa-folder-open"
+                style="padding-left:15px"
+                class="col-md-12">
+      </abn-tree>
+    </div>
+  </div>
+  <div class="col-sm-9 col-md-9 col-lg-9" ng-if="uiStructure">
+    <ol class="breadcrumb">
+      <div ng-if="loadedScenarioDescription.scenarioName !== ''">{{'Szenarioname: ' + loadedScenarioDescription.scenarioName}}</div>
+      <div ng-if="loadedScenarioDescription.description !== ''">{{'Beschreibung: ' + loadedScenarioDescription.description}}</div>
+      <li>Aktuelle Auswahl:</li>
+      <li ng-repeat="node in breadcrumbs"
+          ng-class="{active: $last}">
+        <a ng-click="selectNode(node)">{{node.label}}</a>
+      </li>
+    </ol>
+    <hierarchy-element>
+    </hierarchy-element>
+  </div>
+</div>

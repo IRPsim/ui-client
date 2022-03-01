@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h3 class="modal-title">Sensitivitätsanalyse</h3>
+  <p>Systematische Parametervariation für Sensitivitätsanalysen</p>
+</div>
+
+<div class="modal-body">
+  <p>Es sollen {{numParameters}} Parameter variiert werden.</p>
+  <p>Nach aktueller Parameterierung würden <strong>{{numParameters === 0? 'keine' : numSimulations}}</strong> unterschiedliche Optimierungsläufe gestartet werden!</p>
+  <p>Bitte legen Sie die gewünschte Art der Variation fest.</p>
+
+  <form name="form">
+    <div class="form-group" ng-class="{'has-error has-feedback': form.steps.$invalid}">
+      <label for="steps" class="control-label">Anzahl Schritte pro Parameter</label>
+      <input type="number" ng-model="steps" class="form-control" id="steps" min="2" step="1" ng-disabled="numParameters === 0">
+    </div>
+    <div class="form-group" ng-class="{'has-error has-feedback': form.variationType.$invalid}">
+      <label class="control-label">Verschneidung der Parameter</label>
+      <label class="radio-inline">
+        <input type="radio" ng-model="variationType" value="lockstep"> Gleichschritt
+      </label>
+      <label class="radio-inline">
+        <input type="radio" ng-model="variationType" value="cross"> Kreuzprodukt
+      </label>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <div style="padding-left: 15px">
+    <button class="btn btn-default btn-primary" ng-click="submit()" ng-disabled="numParameters === 0">Starten</button>
+    <button class="btn btn-danger" ng-click="cancel()">Abbrechen</button>
+  </div>
+</div>

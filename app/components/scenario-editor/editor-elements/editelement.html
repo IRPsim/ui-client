@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-left">
+      <h4 id="elementId{{::id}}">{{heading}}</h4>
+    </div>
+    <button ng-if="callback"
+            class="pull-right btn btn-default glyphicon glyphicon-pushpin"
+            title="Behalte aktuelles Element im Menü auf der rechten Seite."
+            ng-click="callback()">
+    </button>
+    <div class="clearfix"></div>
+  </div>
+  <div class="panel-body" style="overflow-x: auto">
+    <p><div ng-bind-html="description"></div></p>
+    <div ng-transclude></div>
+  </div>
+</div>
+

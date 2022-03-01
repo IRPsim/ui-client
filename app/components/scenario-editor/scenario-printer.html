@@ -1,0 +1,24 @@
+<span ng-if="scenario.years">
+  <h3>{{title}}</h3>
+
+  <span ng-if="tag === 'output'">
+    <span ng-repeat="scenario in dummyScenario">
+      <span ng-repeat="selectedElement in leafElements"
+            ng-if="selectedElement.year === -1">
+        <h4 style="page-break-before: always; padding-top:1cm; margin-bottom:0.5cm">
+          <b ng-repeat="crumb in selectedElement.breadcrumb">{{crumb}}</b>
+        </h4>
+        <hierarchy-element></hierarchy-element>
+      </span>
+    </span>
+  </span>
+
+  <span ng-repeat="scenario in scenario.years">
+    <span ng-repeat="selectedElement in leafElements" ng-if="scenario.config.year.value === selectedElement.year">
+      <h4 style="page-break-before: always; padding-top:1cm; margin-bottom:0.5cm">
+        <b ng-repeat="crumb in selectedElement.breadcrumb">{{crumb}}</b>
+      </h4>
+      <hierarchy-element></hierarchy-element>
+    </span>
+  </span>
+</span>

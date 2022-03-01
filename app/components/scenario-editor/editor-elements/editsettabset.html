@@ -1,0 +1,104 @@
+<uib-tabset>
+  <uib-tab ng-repeat="name in set.names | filter:hasAnyAttributeOrTable track by $index"
+       select="onTabSelected()"
+       active="tabs[$index].active">
+    <uib-tab-heading>
+      <span uib-tooltip="{{selectedElement.set}}">{{name}}</span>
+      <span ng-if="!readOnly && !definition.hidden">
+        <a class="pull-right"
+           style="margin-left:10px; cursor:pointer"
+           title="Löschen"
+           ng-confirmed-click-message="Soll das Element <strong>{{name}}</strong> aus dem Set <strong>{{definition.name}}</strong> wirklich gelöscht werden?"
+           ng-confirmed-click="removeSetMember(definition.name, $index)">
+          <span class="fa fa-remove"></span>
+        </a>
+        <a class="pull-right"
+           style="margin-left:10px; cursor:pointer"
+           title="Klonen"
+           ng-click="copySetMember(definition.name, name)">
+          <span class="fa fa-copy"></span>
+        </a>
+      </span>
+    </uib-tab-heading>
+    <p>{{definition.description}}</p>
+    <div>
+      <table class="table table-condensed">
+        <tbody>
+          <tr ng-if="!readOnly && !definition.hidden">
+            <th class="col-sm-3 col-md-3 col-lg-2">Bezeichner</th>
+            <td class="col-sm-9 col-md-9 col-lg-10">
+              <!-- | filter:includeSupersets(selectedElement.set) -->
+              <span editable-text="set.names[$index]"
+                    e-uib-typeahead="elem.member for elem in potentialSetElements | filter:{member: $viewValue, set: selectedElement.set} | limitTo:8"
+                    e-typeahead-min-length="0"
+                    onbeforesave="renameSetMember(definition.name,$index,$data)">{{name}}</span>
+              <span ng-if="readOnly">
+                {{name}}
+              </span>
+            </td>
+          </tr>
+          <tr ng-repeat="attribute in selectedElement.contents | filter:definitionWithoutData(selectedElement,['attributes'],name) track by $index">
+            <th class="col-sm-3 col-md-3 col-lg-2">
+              <span uib-tooltip="{{findAttributeDefinition(attribute).description}}">{{findAttributeDefinition(attribute).identifier}}</span></th>
+            <td class="col-sm-9 col-md-9 col-lg-10">
+              <edit-single-value definition="findAttributeDefinition(attribute)"
+                                 series-group="{{definition.name + name}}"
+                                 aggregates="findAggregates(attribute,name)"
+                                 data="findSetAttribute(selectedElement.set,name,attribute.name)"
+                                 location="['sets',name,attribute.name]"
+                                 context="{setName1: selectedElement.set, setElement1: name, modelType: type}"
+                                 validator="changeValidator(validationEvent)"
+                                 element-name="{{name}}"
+                                 read-only="{{readOnly}}"
+                                 length="{{scenario.config.simulationlength}}"
+                                 scenario="scenario.config.scenario.value"
+                                 base-year="{{multiYearScenario.years[0].config.year.value}}"
+                                 current-year="{{scenario.config.year.value}}"
+                                 timestep="{{scenario.config.timestep}}"></edit-single-value>
+            </td>
+          </tr>
+        </tbody>
+        <tbody ng-repeat="table in tables | filter:isTableFiltered | filter:tableHasAnyDataFor(name) track by table.definition.name">
+          <tr>
+            <th colspan="2">
+              <span uib-tooltip="{{table.definition.description}}">{{table.definition.identifier}}</span>
+            </th>
+          <tr>
+          <tr ng-repeat="otherSetName in table.otherSetsNames | filter:tableHasData(table,name) track by $index">
+            <th class="col-sm-3 col-md-3 col-lg-2">
+              <span uib-tooltip="{{table.otherSet}}">{{otherSetName}}</span>
+            </th>
+            <td class="col-sm-9 col-md-9 col-lg-10">
+              <edit-single-value definition="table.definition"
+                                 series-group="{{definition.name + name}}"
+                                 aggregates="findAggregates(table.ui)[index1(table,name,otherSetName)][index2(table,name,otherSetName)]"
+                                 data="table.data[index1(table,name,otherSetName)][index2(table,name,otherSetName)]"
+                                 location="['tables',index1(table,name,otherSetName),index2(table,name,otherSetName)]"
+                                 context="{setName1: selectedElement.set, setElement1: name, setName2: table.otherSet, setElement2: otherSetName, modelType: type}"
+                                 validator="changeValidator(validationEvent)"
+                                 element-name="{{otherSetName}}"
+                                 read-only="{{readOnly}}"
+                                 length="{{scenario.config.simulationlength}}"
+                                 scenario="scenario.config.scenario.value"
+                                 base-year="{{multiYearScenario.years[0].config.year.value}}"
+                                 current-year="{{scenario.config.year.value}}"
+                                 timestep="{{scenario.config.timestep}}"></edit-single-value>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </uib-tab>
+  <li ng-if="!readOnly && !definition.hidden">
+    <!-- HACK: we manually insert something that looks and feels like a tab. We can't have a new tab,
+           because the 'tabset' directive will delete tabs individually on $destroy, which triggers
+           'onselect' events per tab. When we now add a set member on this event, we see the effect that
+           each time the user switches from one set visualization to the next he gets an additional set member.
+           On the other hand just using a link within a <tab-heading> means the user has to aim specifically for this link.
+           When he hits the surrounding tabheading instead, nothing happens but an empty tab.-->
+    <a ng-click="addMember(definition.name)"
+       class="fa fa-plus-square"
+       style="cursor:pointer">
+    </a>
+  </li>
+</uib-tabset>

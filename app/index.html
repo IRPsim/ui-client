@@ -1,0 +1,151 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="bower_components/angular-xeditable/dist/css/xeditable.css" />
+    <link rel="stylesheet" href="bower_components/angular-growl-v2/build/angular-growl.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-bootstrap-nav-tree/dist/abn_tree.css" />
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.min.css" />
+    <link rel="stylesheet" href="bower_components/ng-tags-input/ng-tags-input.bootstrap.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+    <link rel="stylesheet" href="bower_components/vis/dist/vis.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/fixednavbar.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="irpsimApp">
+    <div growl limit-messages="10"></div>
+    <!--[if lt IE 7]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div class="container-fluid">
+      <app-toolbar></app-toolbar>
+
+      <div ui-view></div>
+
+      <div class="footer">
+        <p>
+          <span class="glyphicon glyphicon-thumbs-up"></span> Konfiguration Optimierungsmodell
+          <span class="pull-right">&copy;2018 Universität Leipzig / InfAI</span>
+        </p>
+
+      </div>
+    </div>
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+    <!-- endbuild -->
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+    <script src="bower_components/angular-growl-v2/build/angular-growl.js"></script>
+    <script src="bower_components/angular-bootstrap-nav-tree/dist/abn_tree_directive.js"></script>
+    <script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/ngDraggable/ngDraggable.js"></script>
+    <script src="bower_components/dygraphs/dygraph-combined.js"></script>
+    <script src="bower_components/ui-common/dist/common-concated.js"></script>
+    <script src="bower_components/ng-tags-input/ng-tags-input.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+    <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+    <script src="bower_components/file-saver/dist/FileSaver.min.js"></script>
+    <script src="bower_components/plotlyjs/plotly.js"></script>
+    <script src="bower_components/timeseries-analysation-tool/app/dist/concat-min.js"></script>
+    <script src="bower_components/vis/dist/vis.js"></script>
+    <script src="bower_components/jszip/dist/jszip.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="components/app.js"></script>
+    <script src="components/main/main.controller.js"></script>
+    <script src="components/scenario-editor/scenario-editor.controller.js"></script>
+    <script src="components/scenario-editor/backend-version-cache.service.js"></script>
+    <script src="components/scenario-editor/editor-elements/editelement.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/toggleeditelement.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/editsetattributes.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/editsettabset.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/editsinglevalue.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/edittable.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/timeserieseditor.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/timeserieseditor.service.js"></script>
+    <script src="components/scenario-editor/editor-elements/showaggregates.directive.js"></script>
+    <script src="components/scenario-editor/editor-elements/sensitivity.controller.js"></script>
+    <script src="components/scenario-editor/scenario-validation.service.js"></script>
+    <script src="components/scenario-editor/scenario-definitions.service.js"></script>
+    <script src="components/scenario-editor/scenario-state.service.js"></script>
+    <script src="components/scenario-editor/scenario-configurator.directive.js"></script>
+    <script src="components/scenario-editor/scenario-pull.service.js"></script>
+    <script src="components/scenario-editor/scenario-printer.directive.js"></script>
+    <script src="components/scenario-editor/scenario-table-editor.directive.js"></script>
+    <script src="components/scenario-editor/simulations/simulation-controls.directive.js"></script>
+    <script src="components/scenario-editor/simulations/sensitivity-config.controller.js"></script>
+    <script src="components/scenario-editor/simulations/sensitivity.service.js"></script>
+    <script src="components/scenario-editor/simulations/result-table-editor.directive.js"></script>
+    <script src="components/scenario-editor/convert-to-number.directive.js"></script>
+    <script src="components/scenario-editor/hierarchyelement.directive.js"></script>
+    <script src="components/scenario-editor/multichart/result-selectedseriesplotter.directive.js"></script>
+    <script src="components/scenario-editor/multichart/result-seriesselector.service.js"></script>
+    <script src="components/common/dataset-selector.directive.js"></script>
+    <script src="components/common/data-structures.service.js"></script>
+    <script src="components/common/stickyheader.directive.js"></script>
+    <script src="components/common/timestimator.service.js"></script>
+    <script src="components/common/confirmed-click.directive.js"></script>
+    <script src="components/common/three-dim-chart-wrapper.directive.js"></script>
+    <script src="components/rlm-timeseries/rlm-powerprofiles.controller.js"></script>
+    <script src="components/scenario-editor/simulations/simulations.service.js"></script>
+    <script src="components/scenario-editor/graph/graph.service.js"></script>
+    <script src="components/scenario-editor/graph/graph.directive.js"></script>
+    <script src="components/common/growl-interceptor.service.js"></script>
+    <script src="components/common/logger.service.js"></script>
+    <script src="components/data-dashboard/algebraic-definition.directive.js"></script>
+    <script src="components/data-dashboard/algebraic-dataset.modal.controller.js"></script>
+    <script src="components/stammdaten/stammdaten.controller.js"></script>
+    <script src="components/stammdaten/prognoseszenarien.controller.js"></script>
+    <script src="components/stammdaten/stammdaten-form.directive.js"></script>
+    <script src="components/stammdaten/stammdaten-selector.directive.js"></script>
+    <script src="components/gdx/config-load.controller.js"></script>
+    <script src="components/gdx/config-save.controller.js"></script>
+    <script src="components/gdx/filter.controller.js"></script>
+    <script src="components/gdx/filter.service.js"></script>
+    <script src="components/toolbar/toolbar.module.js"></script>
+    <script src="components/toolbar/toolbar.component.js"></script>
+    <script src="components/toolbar/toolbar.services.js"></script>
+    <script src="components/scenario-editor/graph-image/graph-image.directive.js"></script>
+    <!-- endbuild -->
+    <!-- see [1] in Gruntfile.js, do not remove! -->
+    <script src="bower_components/mathjs/dist/math.min.js"></script>
+  </body>
+</html>

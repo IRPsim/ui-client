@@ -1,0 +1,8 @@
+bower ui-common#master      not-cached gitolite3@irpsim.uni-leipzig.de:ui-common.git#master
+bower ui-common#master         resolve gitolite3@irpsim.uni-leipzig.de:ui-common.git#master
+bower ui-common#master        checkout master
+bower ui-common#master        resolved gitolite3@irpsim.uni-leipzig.de:ui-common.git#13a0c997af
+bower font-awesome    extra-resolution Unnecessary resolution: font-awesome#4.7.0
+bower ui-common#master         install ui-common#13a0c997af
+
+ui-common#13a0c997af bower_components/ui-common

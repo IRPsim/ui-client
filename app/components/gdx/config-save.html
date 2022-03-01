@@ -1,0 +1,27 @@
+<md-dialog>
+  <form ng-cloak>
+
+    <div class="modal-header">
+      <h3 class="modal-title"><strong style="padding-left: 15px">Konfiguration speichern</strong></h3>
+    </div>
+
+    <div class="modal-body">
+      <div class="row">
+        <div style="margin: 15px 30px">
+          <input placeholder="Name" class="form-control" type="text" ng-model="save.name">
+        </div>
+        <div style="margin: 15px 30px">
+          <input placeholder="Ersteller" class="form-control" type="text" ng-model="save.creator">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div style="padding-left: 15px">
+        <button class="btn btn-primary pull-left" ng-click="answer()">Speichern</button>
+        <button class="btn btn-danger pull-left" ng-click="cancel()">Schließen</button>
+      </div>
+    </div>
+
+  </form>
+</md-dialog>

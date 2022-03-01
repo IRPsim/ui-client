@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default" ng-init="open = true" >
+      <!--ng-if="timeseriesarray.length > 0"-->
+      <div class="panel-heading" ng-click="open = !open">
+        Auswahl von Ergebniszeitreihen <span class="pull-right fa" ng-class="{'fa-caret-down':!open, 'fa-caret-up': open}"></span>
+      </div>
+
+      <div class="panel-body" ng-show="open">
+        <b>Filter</b>
+        <label class="pull-right">Nur ausgewählte Zeitreihen anzeigen: <input type="checkbox" ng-model="showonlyselecteditems"/></label>
+        <p>Geben sie einen Parameternamen an:</p>
+        <input type="text" ng-model="parafilter"/>
+        <div  style="max-height: 200px; overflow-y:auto">
+          <table class="table hover">
+            <thead>
+            <tr>
+              <th style="font-size: 10pt">Parametername</th>
+              <th style="font-size: 10pt">Konkreter Zeitreihennamen</th>
+              <th style="font-size: 10pt">Achse</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="object in parameters | filter:parafilter" ng-class="{success: object.selected}" ng-hide="showonlyselecteditems && !object.selected">
+              <td style="font-size: 8pt" ng-click="changeSelected(object)">{{object.name}}</td>
+              <td style="font-size: 8pt" ng-click="changeSelected(object)">{{object.value}}</td>
+              <td ng-if="object.selected">
+                <div class="btn-group btn-group-xs" data-toggle="buttons" role="group">
+                  <label class="btn active" ng-click="setAxisForSeries(object.value, 'y1')">
+                    <input type="radio"><span class="fa fa-arrow-left"></span>
+                  </label>
+                  <label class="btn" ng-click="setAxisForSeries(object.value, 'y2')">
+                    <input type="radio"><span class="fa fa-arrow-right"></span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="row">
+  <div class="col-md-12 aggChart">
+    <zoomable-chart series-names="seriesnames"
+                    max-length="{{maxLength}}"
+                    options="options"
+                    ng-if="seriesnames.length>0"
+                    isforprint="false">
+    </zoomable-chart>
+  </div>
+</div>
+

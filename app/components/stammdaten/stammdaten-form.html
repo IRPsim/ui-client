@@ -1,0 +1,347 @@
+<div>
+  <form name="form" class="form-horizontal" style="margin-top:30px" autocomplete="off" ng-init="noMinusRegex='^[^-]+$'">
+    <div class="form-group">
+      <label for="sdName" class="col-sm-3 control-label">Name</label>
+
+      <div class="col-sm-9"
+           ng-class="{'has-error has-feedback': form.name.$invalid && submitted}">
+        <input type="text"
+               autocomplete="off"
+               class="form-control"
+               name="name"
+               id="sdName"
+               placeholder="{{getDerivedValue('name') || 'Bezeichner'}}"
+               ng-model="data.name"
+               ng-required="!data.abstrakt && !hasDerivedValue('name')"
+               ng-pattern="noMinusRegex">
+      <span ng-show="form.name.$error.required && submitted">
+        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+        <span class="help-block">Bitte geben sie eine Bezeichnung für dieses Stammdatum ein.</span>
+      </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdTyp" class="col-sm-3 control-label">Typ</label>
+
+      <div class="col-sm-9 scrollable-typeahead custom-typeahead"
+           ng-class="{'has-error has-feedback': form.typ.$invalid && submitted }">
+        <input type="text"
+               autocomplete="off"
+               class="form-control"
+               name="typ"
+               id="sdTyp"
+               placeholder="{{getDerivedValue('typ') || 'Typ'}}"
+               ng-model="data.typ"
+               ng-change="typeChanged()"
+               ng-required="!data.abstrakt && !hasDerivedValue('typ')"
+               ng-pattern="noMinusRegex"
+               uib-typeahead="p.name as p.name for p in parameterNames | filter: $viewValue | limitTo: 100"
+               typeahead-on-select="typeChanged()"
+               typeahead-template-url="parameterTypeaheadTemplate.html"
+               typeahead-min-length="3"
+               typeahead-editable="true"
+               typeahead-show-hint="true">
+        <!-- custom template for "Typ" uib-typeahead -->
+        <script type="text/ng-template" id="parameterTypeaheadTemplate.html">
+          <a>
+            <div class="headline">
+              <span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+            </div>
+            <div class="metadata">
+              <div>
+                <strong>Typ:</strong> {{match.model.type}} &#xb7 <strong>Datentyp:</strong> {{match.model['data-type']}} &#xb7 <strong>Einheit:</strong> {{match.model.unit || 'N/A'}}
+              </div>
+            </div>
+            <div class="description">
+              <span ng-bind-html="match.model.description | uibTypeaheadHighlight:query"></span>
+            </div>
+          </a>
+        </script>
+        <span ng-show="form.typ.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Bitte geben sie einen Typ bzw. eine Klassifikation ein (z.B. "par_a_b_c")</span>
+        </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sda" class="col-sm-3 control-label">Abstrakt</label>
+
+      <div class="col-sm-9">
+        <input type="checkbox" name="abstrakt" id="sda" ng-model="data.abstrakt">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdref" class="col-sm-3 control-label">Referenz auf</label>
+
+      <div class="col-sm-9 scrollable-typeahead custom-typeahead">
+        <input class="form-control"
+               type="text"
+               autocomplete="off"
+               name="referenz"
+               id="sdref"
+               ng-model="data.parent"
+               uib-typeahead="parent as parent.name for parent in parents | filter:removeParent() | filter: $viewValue | filter:noDescendants"
+               typeahead-template-url="referenceTypeaheadTemplate.html"
+               typeahead-min-length="0"
+               typeahead-editable="false"
+               typeahead-show-hint="true">
+        <!-- custom template for "Referenz auf" uib-typeahead -->
+        <script type="text/ng-template" id="referenceTypeaheadTemplate.html">
+          <a>
+            <div class="headline">
+              <span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+            </div>
+            <div class="metadata">
+              <strong>Abstrakt:</strong> {{match.model.abstrakt ? 'Ja' : 'Nein'}} &#xb7 <strong>Typ:</strong> {{match.model.typ || 'N/A'}} &#xb7 <strong>Bezugsjahr:</strong> {{match.model.bezugsjahr || 'N/A'}} &#xb7 <strong>Intervall:</strong> {{match.model.zeitintervall || 'N/A'}}
+            </div>
+          </a>
+        </script>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdbezugsjahr" class="col-sm-3 control-label">Bezugsjahr</label>
+
+      <div class="col-sm-9" ng-class="{'has-error has-feedback': form.bezugsjahr.$invalid && submitted}">
+        <input type="text" class="form-control" name="bezugsjahr" id="sdbezugsjahr"
+               autocomplete="off"
+               placeholder="{{getDerivedValue('bezugsjahr') || 'Bezugsjahr'}}" ng-model="data.bezugsjahr"
+               ng-required="!data.abstrakt && !hasDerivedValue('bezugsjahr')"
+               ng-change="reloadSzenarioSet(data.bezugsjahr)" ng-model-options='{ debounce: 500 }'>
+      <span ng-show="form.bezugsjahr.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Ein Bezugsjahr spezifiziert das Jahr mit historischen Echtdaten</span>
+      </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdprognoseHorizont" class="col-sm-3 control-label">Prognosehorizont</label>
+
+      <div class="col-sm-9" ng-class="{'has-error has-feedback': form.prognoseHorizont.$invalid && submitted }">
+        <input type="text" class="form-control"
+               autocomplete="off"
+               name="prognoseHorizont"
+               id="sdprognoseHorizont"
+               placeholder="{{getHorizont()}}"
+               ng-model="data.prognoseHorizont"
+               ng-required="!data.abstrakt && !hasDerivedValue('prognoseHorizont')">
+      <span ng-show="form.prognoseHorizont.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Der Prognosehorizont spezifiziert die Anzahl zu prognostizierender Jahre.</span>
+      </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdrnfy" class="col-sm-3 control-label">Verantwortlicher Bezugsjahr</label>
+
+      <div class="col-sm-4" ng-class="{'has-error has-feedback': form.responsibleNameFirstYear.$invalid && submitted }">
+        <input type="text"
+               autocomplete="off"
+               class="form-control"
+               name="responsibleNameFirstYear"
+               id="sdrnfy"
+               placeholder="{{getDerivedValue('verantwortlicherBezugsjahr.name') || 'Vollständiger Name'}}"
+               ng-model="data.verantwortlicherBezugsjahr.name"
+               ng-required="!data.abstrakt && !hasDerivedValue('verantwortlicherBezugsjahr.name')">
+      <span ng-show="form.responsibleNameFirstYear.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Wer ist verantwortlich für die Bereitstellung der Echtdaten des Bezugsjahres?</span>
+      </span>
+      </div>
+      <div class="col-sm-5"
+           ng-class="{'has-error has-feedback': form.responsibleEmailFirstYear.$invalid && submitted }">
+        <input type="email"
+               class="form-control"
+               name="responsibleEmailFirstYear"
+               id="sdrefy"
+               placeholder="{{getDerivedValue('verantwortlicherBezugsjahr.email') || 'Emailadresse'}}"
+               ng-model="data.verantwortlicherBezugsjahr.email"
+               ng-required="!data.abstrakt && !hasDerivedValue('verantwortlicherBezugsjahr.email')">
+      <span ng-show="form.responsibleEmailFirstYear.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Bitte eine Emailaddresse angeben!</span>
+      </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdrnry" class="col-sm-3 control-label">Verantwortlicher Prognosen</label>
+
+      <div class="col-sm-4" ng-class="{'has-error has-feedback': form.responsibleNameRest.$invalid && submitted }">
+        <input type="text"
+               autocomplete="off"
+               class="form-control"
+               name="responsibleNameRest"
+               id="sdrnry"
+               placeholder="{{getDerivedValue('verantwortlicherPrognosejahr.name') || 'Vollständiger Name'}}"
+               ng-model="data.verantwortlicherPrognosejahr.name"
+               ng-required="!data.abstrakt && !hasDerivedValue('verantwortlicherPrognosejahr.name')">
+      <span ng-show="form.responsibleNameRest.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Wer ist verantwortlich für die Bereitstellung der Prognoesedaten?</span>
+      </span>
+      </div>
+      <div class="col-sm-5" ng-class="{'has-error has-feedback': form.responsibleEmailRest.$invalid && submitted }">
+        <input type="email"
+               class="form-control"
+               name="responsibleEmailRest"
+               placeholder="{{getDerivedValue('verantwortlicherPrognosejahr.email') || 'Emailadresse'}}"
+               ng-model="data.verantwortlicherPrognosejahr.email"
+               ng-required="!data.abstrakt && !hasDerivedValue('verantwortlicherPrognosejahr.email')">
+      <span ng-show="form.responsibleEmailRest.$error.required && submitted">
+          <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+          <span class="help-block">Bitte eine Emailaddresse angeben!</span>
+      </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="sdzi" class="col-sm-3 control-label">Auflösung der Datensätze</label>
+
+      <div class="col-sm-9">
+        <select class="form-control" id="sdzi" name="zeitintervall" ng-model="data.zeitintervall"
+                ng-options="res.value as res.label for res in resolutions"></select>
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{ 'has-warning' : !isValidSetName1 && data.setName1.length > 0 && (data.typ.length > 0 || getDerivedValue('typ').length > 0) }" ng-init="editSet1 = false;">
+      <label for="set1" class="col-sm-3 control-label">Set 1</label>
+
+      <div class="col-sm-4 scrollable-typeahead custom-typeahead set-typeahead">
+        <input id="set1"
+               type="text"
+               autocomplete="off"
+               class="form-control"
+               placeholder="{{getDerivedValue('setName1') || 'Name des ersten Sets'}}"
+               ng-model="data.setName1"
+               ng-required="!data.abstrakt && !hasDerivedValue('setName1') && getValue('setElemente1').length > 0"
+               uib-typeahead="set.name as set.name for set in filteredSets | filter: $viewValue"
+               typeahead-template-url="setTypeaheadTemplate.html"
+               typeahead-min-length="0"
+               typeahead-editable="false"
+               typeahead-show-hint="true">
+        <div ng-if="!isValidSetName1 && data.setName1.length > 0 && (data.typ.length > 0 || getDerivedValue('typ').length > 0)">
+          <span class="glyphicon glyphicon-warning-sign form-control-feedback" style="margin-right: 10px;" aria-hidden="true"></span>
+          <span id="helpBlock2" class="help-block">Set Element ist nicht kompatibel mit Parameter <em>{{data.typ || getDerivedValue('typ')}}</em></span>
+        </div>
+      </div>
+
+      <div class="col-sm-5" ng-if="(data.setName1 && (data.setName1.length > 0)) || editSet1">
+        <tags-input ng-model="data.setElemente1"
+                    class="ade-tag-input"
+                    min-length="1"
+                    replace-spaces-with-dashes="false"
+                    tabindex="1"
+                    enable-editing-last-tag="true"
+                    placeholder="Bitte geben Sie Namen von Setelementen an."
+                    add-from-autocomplete-only="false">
+        </tags-input>
+        <button style="margin-top:10px" ng-click="makeSet1Editable()" class="btn btn-default" href=""
+                ng-if="!data.setName1 || (data.setName1.length === 0)" title="Setelement-Editierung abbrechen">
+          <span class="fa fa-remove"></span> Abbrechen
+        </button>
+
+      </div>
+      <div class="col-sm-5" ng-if="(!data.setName1 || (data.setName1.length === 0)) && !editSet1"
+           style="padding-top: 6px; padding-bottom: 6px" ng-click="makeSet1Editable()" title="Zum Editieren anklicken.">
+        {{getValue('setElemente1').join(', ')}}
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-warning' : !isValidSetName2 && data.setName2.length > 0 && (data.typ.length > 0 || getDerivedValue('typ').length > 0) }" ng-init="editSet2 = false;">
+      <label for="set1" class="col-sm-3 control-label">Set 2</label>
+      <div class="col-sm-4 scrollable-typeahead custom-typeahead set-typeahead">
+        <input id="set2"
+               type="text"
+               autocomplete="off"
+               class="form-control"
+               placeholder="{{getDerivedValue('setName2') || 'Name des zweiten Sets'}}"
+               ng-model="data.setName2"
+               ng-required="!data.abstrakt && !hasDerivedValue('setName2') && getValue('setElemente2').length > 0"
+               uib-typeahead="set.name as set.name for set in filteredSets | filter: $viewValue"
+               typeahead-template-url="setTypeaheadTemplate.html"
+               typeahead-min-length="0"
+               typeahead-editable="false"
+               typeahead-show-hint="true">
+        <div ng-if="!isValidSetName2 && data.setName2.length > 0 && (data.typ.length > 0 || getDerivedValue('typ').length > 0)">
+          <span class="glyphicon glyphicon-warning-sign form-control-feedback" style="margin-right: 10px;" aria-hidden="true"></span>
+          <span id="helpBlock3" class="help-block">Set Element ist nicht kompatibel mit Parameter <em>{{data.typ || getDerivedValue('typ')}}</em></span>
+        </div>
+      </div>
+      <div class="col-sm-5" ng-if="(data.setName2 && (data.setName2.length > 0)) || editSet2">
+        <tags-input ng-model="data.setElemente2"
+                    class="ade-tag-input"
+                    min-length="1"
+                    replace-spaces-with-dashes="false"
+                    tabindex="1"
+                    enable-editing-last-tag="true"
+                    placeholder="Bitte geben Sie Namen von Setelementen an."
+                    add-from-autocomplete-only="false">
+        </tags-input>
+        <button style="margin-top:10px" ng-click="makeSet2Editable()" class="btn btn-default" href=""
+                ng-if="!data.setName2 || (data.setName2.length === 0)" title="Setelement-Editierung abbrechen">
+          <span class="fa fa-remove"></span> Abbrechen
+        </button>
+      </div>
+      <div class="col-sm-5" ng-if="(!data.setName2 || (data.setName2.length === 0)) && !editSet2"
+           style="padding-top: 6px; padding-bottom: 6px" ng-click="makeSet2Editable()" title="Zum Editieren anklicken.">
+        {{getValue('setElemente2').join(', ')}}
+      </div>
+    </div>
+    <!-- custom template for "Set 1" und "Set 2" uib-typeahead -->
+    <script type="text/ng-template" id="setTypeaheadTemplate.html">
+      <a>
+        <div class="headline">
+          <span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+        </div>
+        <div class="metadata">
+          <div>
+            <div class="row"><div class="col-sm-4"><strong>Datentyp:</strong></div><div class="col-sm-8">{{match.model['data-type']}}</div></div>
+            <div class="row"><div class="col-sm-4"><strong>Subsets:</strong></div><div class="col-sm-8">{{match.model.subsets.length > 0 ? match.model.subsets.join(', ') : 'N/A'}}</div></div>
+            <div class="row"><div class="col-sm-4"><strong>Supersets:</strong></div><div class="col-sm-8">{{match.model.supersets.length > 0 ? match.model.supersets.join(', ') : 'N/A'}}</div></div>
+          </div>
+        </div>
+        <div class="description">
+          <span ng-bind-html="match.model.description | uibTypeaheadHighlight:query"></span>
+        </div>
+      </a>
+    </script>
+
+    <div class="form-group">
+      <label for="tfcomment" class="col-sm-3 control-label">Freier Kommentar</label>
+
+      <div class="col-sm-9">
+        <textarea id="tfcomment"
+                  ng-model="data.kommentar"
+                  rows="3"
+                  style="width:100%"
+                  placeholder="{{getDerivedValue('kommentar')}}"></textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="standard" class="col-sm-3 control-label">Nutze Standardszenario</label>
+
+      <div class="checkbox col-sm-9">
+        <input ng-disabled="szenarien.length === 0" style="margin-left:0" id="standard" type="checkbox"
+               ng-model="useStandard">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-3 control-label">Szenarien zu Bezugsjahr {{data.bezugsjahr}}</label>
+
+      <div ng-if="!loadingSet" class="col-sm-9" style="padding-top: 7px">
+        <span ng-if="szenarien.length > 0"
+              ng-style="useStandard && !forceStandard && {'color':'grey', 'text-decoration': 'line-through'}">{{getScenarioString(szenarien)}}</span>
+        <span ng-if="szenarien.length === 0">Nutze Standardszenario, da keine Szenarien zu diesem Bezugsjahr vorhanden sind.</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <button type="button" ng-click="onCancel()" class="btn btn-danger pull-right"
+              title="Abbrechen">
+        <i class="fa fa-ban"></i> Abbrechen
+      </button>
+      <button style="margin-right:30px" type="submit" ng-click="submit()" class="btn btn-primary pull-right"
+              title="Speichern">
+        <i class="fa fa-floppy-o"></i> Speichern
+      </button>
+
+    </div>
+  </form>
+</div>

@@ -1,0 +1,21 @@
+{
+  "id": 4,
+  "name": "TableStammdatum",
+  "typ": "par_X_SS_CHP_NSRenergyLink",
+  "zeitintervall": "WEEK",
+  "abstrakt": true,
+  "referenz": null,
+  "szenarien": [
+    "Standard"
+  ],
+  "bezugsjahr": 2015,
+  "prognoseHorizont": 3,
+  "verantwortlicherPrognosejahr": {
+    "name": "bar",
+    "email": "bar@bar.de"
+  },
+  "verantwortlicherBezugsjahr": {
+    "name": "foo",
+    "email": "foo@foo.de"
+  }
+}

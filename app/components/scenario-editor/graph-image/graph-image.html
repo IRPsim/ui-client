@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="panel panel-default" style="height:600px;" ng-if="true">
+    <div class="graphimage-container">
+      <!-- Zoom Buttons only shown when image loading finished -->
+      <div class="button-container" ng-if="!graphImageGenerating" style="top: 2rem;">
+        <button class="btn btn-default glyphicon glyphicon-minus" ng-click="zoom('out')"></button>
+        <button class="btn btn-default glyphicon glyphicon-plus" ng-click="zoom('in')"></button>
+      </div>
+      <!-- Download button only shown when image loading finished  -->
+      <div class="button-container" ng-if="!graphImageGenerating" style="bottom: 2rem;">
+        <button class="btn btn-default glyphicon glyphicon-download" ng-click="downloadImage()"></button>
+      </div>
+      <div id="image-container">
+        <img id="graph-image" ng-if="graphImage" ng-src="{{graphImage}}">
+        <!-- Spinner shown while image is loading -->
+        <div class="spinner" ng-if="graphImageGenerating">
+          <div class="rect1"></div>
+          <div class="rect2"></div>
+          <div class="rect3"></div>
+          <div class="rect4"></div>
+          <div class="rect5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

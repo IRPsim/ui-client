@@ -1,0 +1,181 @@
+{
+  "definitions": {
+    "scalars": {
+      "sca_Z_ES_0": {
+        "description": "Einlesen der Rauhigkeitslänge",
+        "tags": [
+          "input",
+          "ES",
+          "Z",
+          "Umweltseite",
+          "0"
+        ],
+        "data-type": "integer",
+        "index": 70,
+        "unit": "m",
+        "default": 20,
+        "name": "sca_Z_ES_0",
+        "type-details": {
+          "module-raw": "ES",
+          "type": "Z",
+          "module": "Umweltseite",
+          "reference": "0",
+          "reference-raw": "0",
+          "type-raw": "Z"
+        },
+        "type": "scalar",
+        "identifier": "Rauhigkeitslänge"
+      },
+      "sca_X_BM_Sonnentank_PS_disclosure": {
+        "description": "Einlesen Weitergabe der PS-Tarife",
+        "tags": [
+          "input",
+          "PS_disclosure",
+          "BM",
+          "Statusvariable",
+          "Geschäftsmodell",
+          "Sonnentank",
+          "X"
+        ],
+        "data-type": "boolean",
+        "processing": [],
+        "index": 49,
+        "unit": "",
+        "default": 1,
+        "name": "sca_X_BM_Sonnentank_PS_disclosure",
+        "type-details": {
+          "description": "PS_disclosure",
+          "module-raw": "BM",
+          "type": "Statusvariable",
+          "module": "Geschäftsmodell",
+          "reference": "Sonnentank",
+          "reference-raw": "Sonnentank",
+          "type-raw": "X",
+          "description-raw": "PS_disclosure"
+        },
+        "type": "scalar",
+        "hidden": false,
+        "identifier": "Weitergabe der PS-Tarife",
+        "domain": {
+          "values": [
+            0,
+            1
+          ]
+        },
+        "validation": []
+      },
+      "sca_Tax_PS_royalties": {
+        "description": "Einlesen der Förderabgabe",
+        "tags": [
+          "input",
+          "PS",
+          "Tax",
+          "Politikseite",
+          "royalties"
+        ],
+        "data-type": "float",
+        "index": 294,
+        "unit": "",
+        "default": 0.09000000357627869,
+        "name": "sca_Tax_PS_royalties",
+        "type-details": {
+          "module-raw": "PS",
+          "type": "Tax",
+          "module": "Politikseite",
+          "reference": "royalties",
+          "reference-raw": "royalties",
+          "type-raw": "Tax"
+        },
+        "type": "scalar",
+        "identifier": "Förderabgabe",
+        "domain": {
+          ">=": 0,
+          "<=": 1
+        }
+      }
+    },
+    "timeseries": {
+      "par_R_MS_E_resneg_provision": {
+        "description": "Einlesen Leistungspreis negative Minutenreserve in Abhängigkeit der Zeitschritte",
+        "tags": [
+          "input",
+          "resneg_provision",
+          "MS",
+          "Gebühr",
+          "Marktseite",
+          "Elektrische Energie",
+          "E",
+          "R"
+        ],
+        "data-type": "floats",
+        "processing": [],
+        "index": 221,
+        "unit": "CHF / MWh",
+        "default": 0.0,
+        "name": "par_R_MS_E_resneg_provision",
+        "type-details": {
+          "description": "resneg_provision",
+          "module-raw": "MS",
+          "type": "Gebühr",
+          "module": "Marktseite",
+          "reference": "Elektrische Energie",
+          "reference-raw": "E",
+          "type-raw": "R",
+          "description-raw": "resneg_provision"
+        },
+        "type": "parameter",
+        "hidden": false,
+        "identifier": "Leistungspreis negative Minutenreserve",
+        "domain": {
+          ">=": 0,
+          "<": null
+        },
+        "validation": [],
+        "dependencies": [
+          "set_ii"
+        ]
+      }
+    }
+  },
+  "specifications": {
+    "input": [{
+      "label": "Test",
+      "description": "Testbeschreibung foo baaar.",
+      "children": [
+        {
+          "label": "Skalare",
+          "description": "Hier befinden sich skalare Testdaten",
+          "set": "set_jj",
+          "contents": [
+            {
+              "name":  "sca_Z_ES_0",
+              "type": "attributes"
+            }, {
+              "name":  "sca_X_BM_Sonnentank_PS_disclosure",
+              "type": "attributes"
+            }, {
+              "name":  "sca_Tax_PS_royalties",
+              "type": "attributes"
+            }
+          ]
+        }, {
+          "label": "Tabellen",
+          "description": "Hier befinden sich Tabellen Testdaten",
+          "set": "set_jj",
+          "contents": [
+            {
+              "name": "par_X_SS_CHP_NSRenergyLink",
+              "type": "tables"
+            }
+          ]
+        }
+      ]
+    }],
+    "delta": [
+
+    ],
+    "output": [
+
+    ]
+  }
+}

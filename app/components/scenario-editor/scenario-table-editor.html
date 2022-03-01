@@ -1,0 +1,71 @@
+<div class="container-fluid" style="height: calc(100% - 20px); margin-bottom:20px; margin-top:20px">
+  <h3>Szenarioverwaltung</h3>
+  <div layout="column" style="height: calc(100% - 50px)">
+    <div flex="" class="table-responsive" style="box-shadow: -0px 0px 7px lightgrey;">
+      <table class="table">
+        <thead>
+        <tr>
+          <th style="padding-bottom: 15px">Datum</th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.creator"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Ersteller" style="min-width: 60px;"
+                     title="Ersteller"/></th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.name"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Name" style="min-width: 60px;"
+                     title="Name"/></th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.description"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Beschreibung"
+                     style="min-width: 60px;" title="Beschreibung"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="scenario in scenarioTableContent | filter:entryGetsFiltered track by scenario.id">
+          <td>{{convertTime(scenario.date)}}</td>
+          <td>{{scenario.creator}}</td>
+          <td>{{scenario.name}}</td>
+          <td>
+            {{scenario.description}}
+            <a href="" class="pull-right" style="margin-left:8px" ng-confirmed-click="deleteScenario(scenario)"
+               ng-confirmed-click-message="Wollen sie das Szenario wirklich löschen?" title="Szenario löschen">
+              <span class="fa fa-times"></span>
+            </a>
+            <a href="" class="pull-right" style="margin-left:8px" ng-click="loadScenarioEntry(scenario)"
+               title="Szenario laden">
+              <span class="fa fa-download"></span>
+            </a>
+            <a ng-if="scenario.deletable && scenario === loadedScenario" href="" class="pull-right"
+               style="margin-left:8px" ng-click="saveScenarioEntry(scenario)"
+               title="Szenario speichern">
+              <span class="fa fa-floppy-o"></span>
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div flex="nogrow" style=" margin-top: 15px; box-shadow: 0 0 5px lightgrey; padding-top:10px;">
+      <div class="col-md-3 form-group">
+        <label for="name">Szenarioname:</label>
+        <input id="name" class="form-control" type="text" ng-model="_name" placeholder="Standard"/>
+      </div>
+      <div class="col-md-3 form-group">
+        <label for="ersteller">Ersteller:</label>
+        <input id="ersteller" class="form-control" type="text" ng-model="_creator" placeholder="System"/>
+      </div>
+
+      <div class="col-md-3 form-group">
+        <label for="beschreibung">Beschreibung:</label>
+        <input id="beschreibung" class="form-control" type="text" ng-model="_description"
+               placeholder="Standardszenario für zwei Wochen ..."/>
+      </div>
+      <div class="col-md-3" style=" margin-top:3px; ">
+        <label for="btn" ng-show="false"></label>
+        <button id="btn" class="btn btn-primary hidden-print pull-right" type="submit" style="margin-top: 22px"
+                ng-click="storeScenario(_creator, _name, _description)"
+                ng-disabled="!_name || !_creator || !_description || (_name.length === 0) || (_creator.length === 0) || (_description.length === 0)">
+          <span class="fa fa-plus"></span> Hinzufügen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

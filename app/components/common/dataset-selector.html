@@ -1,0 +1,74 @@
+<p ng-if="warningImplicitYearSelect"
+   class="bg-warning">
+  <i class="glyphicon glyphicon-warning-sign"></i>
+  Es wurde kein Datensatz mit passendem Jahr gefunden. Stattdessen wurde ein Datensatz aus
+  {{implicitSelectedDataset.jahr}} gewählt.</p>
+<p ng-if="warnMissingScenario" class="bg-warning">
+  <i class="glyphicon glyphicon-warning-sign"></i>
+  Es wurde kein Datensatz im gewünschten Prognoseszenario gefunden. Bitte wählen Sie eine Alternative.
+</p>
+<form>
+  <div class="form-group">
+    <label for="masterdataselector">Stammdatum:</label> ({{loadTags('').length}} Datensätze verfügbar)
+    <tags-input id="masterdataselector" replaceSpacesWithDashes="false"
+                placeholder="Name des Stammdatums" ng-model="masterData" on-tag-added="selectMasterData($tag)"
+                on-tag-adding="rejectAddingTooManyTags($tag)"
+                add-from-autocomplete-only="true" template="own-tag-template"
+                max-tags="1">
+      <auto-complete template="own-autocomplete-template" load-on-empty="true" load-on-focus="true" min-length="0"
+                     source="loadTags($query)"></auto-complete>
+    </tags-input>
+
+    <!--Templates for tags and autocomplete-->
+    <script type="text/ng-template" id="own-tag-template">
+      <div class="tag-template">
+        <div>
+          <span><b>{{data.name}}</b> <i>[ {{data.showTyp + ", " + data.showBezugsjahr}} ]</i></span>
+          <a class="remove-button" ng-click="$removeTag()">&#10006;</a>
+        </div>
+      </div>
+    </script>
+    <script type="text/ng-template" id="own-autocomplete-template">
+      <div class="tag-template">
+        <div>
+          <span><b>{{data.name}}</b> <small>[{{data.showTyp + ", " + data.showBezugsjahr}}]</small></span>
+        </div>
+      </div>
+    </script>
+  </div>
+  <div class="form-group">
+    <label>Szenarien: </label>
+    <select ng-disabled="masterData.length === 0"
+            class="form-control"
+            ng-options="s.name disable when s.notSelectable for s in available"
+            ng-model="selectedScenario"
+            ng-change="onSelectScenario(selectedScenario)">
+    </select>
+  </div>
+  <div class="form-group" ng-if="!type">
+    <label>Jahre:</label>
+    <!-- ng-attr-multiple is not supported, need to manually duplicate select for single/multiple select
+    Refer to https://github.com/angular/angular.js/issues/7714 for details -->
+    <select ng-disabled="masterData.length === 0 && !selectedScenario"
+            ng-if="single"
+            class="form-control"
+            ng-model="selectedYear.data"
+            ng-init=""
+            ng-options="y.jahr for y in datasetsForSelectedScenario | filter:{szenario: selectedScenario.stelle} | orderBy:'jahr'">
+    </select>
+    <select ng-disabled="masterData.length === 0 && !selectedScenario"
+            ng-if="!single"
+            multiple
+            class="form-control"
+            ng-model="selectedYear.data"
+            ng-options="y.jahr for y in datasetsForSelectedScenario  | filter:{szenario: selectedScenario.stelle} | orderBy:'jahr'">
+    </select>
+  </div>
+  <button class="btn btn-default btn-primary"
+          ng-disabled="!implicitSelectedDataset && (!selectedYear.data || (angular.isArray(selectedYear.data) && selectedYear.data.length === 0))"
+          ng-click="doSelect()">
+    <span class="fa fa-plus" aria-hidden="true"></span>
+    Hinzufügen
+  </button>
+</form>
+

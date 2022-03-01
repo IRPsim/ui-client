@@ -1,0 +1,7 @@
+WARN engine fsevents@2.1.3: wanted: {"node":"^8.16.0 || ^10.6.0 || >=11.0.0"} (current: {"node":"8.10.0","npm":"3.5.2"})
+npm WARN optional Skipping failed optional dependency /chokidar/fsevents:
+npm WARN notsup Not compatible with your operating system or architecture: fsevents@2.1.3
+npm WARN enoent ENOENT: no such file or directory, open '/home/reichelt/workspaces/irpsimworkspace/ui-client/node_modules/noptify/package.json'
+npm WARN grunt-connect-proxy@0.2.0 requires a peer of grunt@~0.4.1 but none was installed.
+npm WARN irpsim@0.0.0 No repository field.
+npm WARN irpsim@0.0.0 No license field.

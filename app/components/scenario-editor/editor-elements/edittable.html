@@ -1,0 +1,33 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+    <tr>
+      <th></th>
+      <th ng-repeat="name in table.thisSetsNames">{{name}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="otherSetName in table.otherSetsNames | filter:tableHasData(table,table.thisSetsNames[0]) track by $index"> <!-- FFIXME this will hide the whole row if there is no data for the first name in thisSetsNames!-->
+      <th>
+        <span uib-tooltip="{{table.otherSet}}">{{otherSetName}}</span>
+      </th>
+      <td ng-repeat="name in table.thisSetsNames">
+        <edit-single-value definition="table.definition"
+                           series-group="{{definition.name + name}}"
+                           aggregates="findAggregates(table.ui)[index1(table,name,otherSetName)][index2(table,name,otherSetName)]"
+                           data="table.data[index1(table,name,otherSetName)][index2(table,name,otherSetName)]"
+                           location="['tables',index1(table,name,otherSetName),index2(table,name,otherSetName)]"
+                           context="{setName1: selectedElement.set, setElement1: name, setName2: table.otherSet, setElement2: otherSetName, modelType: type}"
+                           validator="changeValidator(validationEvent)"
+                           element-name="{{otherSetName}}"
+                           read-only="{{readOnly}}"
+                           length="{{scenario.config.simulationlength}}"
+                           scenario="scenario.config.scenario.value"
+                           base-year="{{multiYearScenario.years[0].config.year.value}}"
+                           current-year="{{scenario.config.year.value}}"
+                           timestep="{{scenario.config.timestep}}"></edit-single-value>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

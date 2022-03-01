@@ -1,0 +1,22 @@
+{
+  "id": 2,
+  "name": "BooleanScalar",
+  "typ": "sca_X_BM_Sonnentank_PS_disclosure",
+  "zeitintervall": "YEAR",
+  "abstrakt": false,
+  "referenz": null,
+  "szenarien": [
+    "Leme A",
+    "Leme B"
+  ],
+  "bezugsjahr": 2015,
+  "prognoseHorizont": 5,
+  "verantwortlicherPrognosejahr": {
+    "name": "foo",
+    "email": "foo@test.de"
+  },
+  "verantwortlicherBezugsjahr": {
+    "name": "foo",
+    "email": "foO@test.de"
+  }
+}

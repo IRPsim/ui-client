@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <h3 class="modal-title">Wachstumsfaktoren</h3>
+
+  <p>Systematische Parametervariation für Sensitivitätsanalysen</p>
+</div>
+
+<form name="form">
+  <div class="modal-body">
+    <p>Bitte spezifizieren Sie den Wertebereich des Faktors, mit dem der Parameter "{{label}}" variiert werden soll.</p>
+
+    <p>Beim Starten der Optimierungsläufe können Sie dann die Anzahl der Teilintervalle festlegen.</p>
+
+
+    <div class="form-group" ng-class="{'has-error': minError}">
+      <label for="minValue" class="control-label">Startwert</label>
+      <input type="number" ng-model="min" class="form-control" id="minValue"
+             ng-change="form.minValue.$invalid = ((minError = isInvalidValue(min)).length > 0)">
+
+      <p ng-if="minError.length > 0" style="color: #a94442; margin-top:7px">
+        {{minError}}
+      </p>
+    </div>
+    <div class="form-group" ng-class="{'has-error': maxError}">
+      <label for="maxValue" class="control-label">Endwert</label>
+      <input type="number" ng-model="max" class="form-control" id="maxValue"
+             ng-change="form.maxValue.$invalid = ((maxError = isInvalidValue(max)).length > 0)">
+
+      <p ng-if="maxError.length > 0" style="color: #a94442; margin-top:7px">
+        {{maxError}}
+      </p>
+    </div>
+    <div class="form-group radio radio-inline">
+      <label style="padding-left:0"><input type="radio" name="mode" ng-model="mode" value="multiply" ng-change="resetVals(mode)">Multiplizieren</label>
+      <label style="margin-left: 20px"><input type="radio" name="mode" ng-model="mode" value="add" ng-change="resetVals(mode)">Addieren</label>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <div>
+      <button ng-if="!((min === max) && (min === 1) && (mode === 'multiply'))" class="btn btn-default pull-left" ng-click="reset()">Sensitivität
+        zurücksetzen
+      </button>
+      <button class="btn btn-default btn-primary" ng-click="submit()"
+              ng-disabled="form.minValue.$invalid || form.maxValue.$invalid">
+        Wertebereich setzen
+      </button>
+      <button class="btn btn-danger" ng-click="cancel()">Abbrechen</button>
+    </div>
+  </div>
+
+</form>

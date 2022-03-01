@@ -1,0 +1,32 @@
+[
+  {
+    "jahr": 2015,
+    "szenario": "Bezugsjahr",
+    "seriesid": "22"
+  },
+  {
+    "jahr": 2016,
+    "szenario": "Leme A",
+    "seriesid": "222"
+  },
+  {
+    "jahr": 2017,
+    "szenario": "Leme A",
+    "seriesid": "2222"
+  },
+  {
+    "jahr": 2018,
+    "szenario": "Leme A",
+    "seriesid": "22222"
+  },
+  {
+    "jahr": 2019,
+    "szenario": "Leme A",
+    "seriesid": "222222"
+  },
+  {
+    "jahr": 2016,
+    "szenario": "Leme B",
+    "seriesid": "223"
+  }
+]

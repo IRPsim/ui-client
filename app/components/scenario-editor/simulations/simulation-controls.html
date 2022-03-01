@@ -1,0 +1,97 @@
+<div class="container-fluid">
+  <div class="row">
+
+    <h3 id="simulations-controls">Jobsteuerung</h3>
+
+    <div class="row" style="margin-bottom:15px; margin-top:20px">
+      <div class="col-md-{{option.size}}" ng-repeat="option in options">
+        <input type="text" class="form-control" placeholder="{{option.name}}" ng-model="option.value"/>
+      </div>
+    </div>
+
+    <button class="btn btn-default btn-primary"
+            ng-click="submitSimulation()"
+            ng-disabled="!allowSimulation">
+      <span class="glyphicon glyphicon-play"></span> Job starten
+    </button>
+    <button class="btn btn-default pull-right"
+            ng-click="configureSensitivity()">
+      <span class="fa fa-sliders"></span> Sensitivitätsanalyse
+    </button>
+    <button class="btn btn-alert"
+            ng-confirmed-click="cancelSimulation()"
+            ng-confirmed-click-message="Soll der Job wirklich gestoppt werden?"
+            ng-disabled="!simulation.state.running">
+      <span class="glyphicon glyphicon-stop"></span> Job abbrechen
+    </button>
+
+    <div class="progress-status" style="margin-top:10px">
+      <div class="row">
+        <span class="col-md-3">Startzeit:</span>
+        <span class="col-md-3">{{simulation.state.time.start | date:'medium' }}</span>
+        <span class="col-md-3">Verbleibend:</span>
+        <span class="col-md-3"> {{simulation.state.time.toGo.duration}}</span>
+      </div>
+      <div class="row">
+        <span class="col-md-3">Fertigstellung:</span>
+        <span class="col-md-3">{{simulation.state.time.end | date:'medium' }}</span>
+        <span class="col-md-3">Dauer:</span>
+        <span class="col-md-3">{{simulation.state.time.overall.duration}}</span>
+      </div>
+      <uib-progressbar ng-class="{'active progress-striped': simulation.state.running}" max="1.0"
+                       value="simulation.state.time.percentage" animate="true">{{ simulation.state.time.percentage * 100
+        | number:1 }}%
+      </uib-progressbar>
+      <em ng-class="{'bg-success': !simulation.state.running,
+                     'bg-info': simulation.state.running,
+                     'bg-danger': simulation.state.error}">{{simulation.state.text}}</em>
+      <table class="table table-hover table-condensed" ng-repeat="scenario in simulation.state.scenario">
+        <thead>
+        <th>Dateityp Model: {{scenario.years[0].config.modeldefinition}}</th>
+        <th ng-repeat="year in scenario.years">Jahr {{year.config.year.value}}</th>
+        </thead>
+        <tbody>
+        <tr ng-if="simulation.results.urls[$index].gdxparameterfileUrls.length > 0">
+          <td>Eingabedatei</td>
+          <td ng-repeat="url in simulation.results.urls[$index].gdxparameterfileUrls">
+            <a ng-href="{{url}}" target="_blank"><span class="fa fa-file-o"></span> {{$index+1}}</a>
+          </td>
+        </tr>
+        <tr ng-if="simulation.results.urls[$index].lstfileUrls.length > 0">
+          <td>Logfile</td>
+          <td ng-repeat="url in simulation.results.urls[$index].lstfileUrls">
+            <a ng-href="{{url}}" target="_blank"><span class="fa fa-file-o"></span> {{$index+1}}</a>
+          </td>
+        </tr>
+        <tr ng-if="simulation.results.urls[$index].csvfileUrls.length > 0">
+          <td>CSV</td>
+          <td ng-repeat="url in simulation.results.urls[$index].csvfileUrls">
+            <a ng-href="{{url}}" target="_blank"><span class="fa fa-table"></span> {{$index+1}}</a>
+          </td>
+        </tr>
+        <tr ng-if="simulation.results.urls[$index].gdxresultfileUrls.length > 0">
+          <td>Ergebnisdatei</td>
+          <td ng-repeat="url in simulation.results.urls[$index].gdxresultfileUrls">
+            <a ng-href="{{url}}" target="_blank"><span class="fa fa-file-o"></span> {{$index+1}}</a>
+          </td>
+        </tr>
+        <tr ng-if="simulation.results.urls[$index].gdxresultfileUrls.length > 0">
+          <td>Parameterexport</td>
+          <td ng-repeat="url in simulation.results.urls[$index].gdxresultfileUrls">
+            <a ui-sref="gdx.filterIdYear({ id: simulation.state.id, year: $index })"><span class="fa fa-filter"></span> {{$index+1}}</a>
+          </td>
+        </tr>
+        <tr ng-if="simulation.results.urls[$index].imagesZipUrls.length > 0">
+          <td>Bilder</td>
+          <td ng-repeat="url in simulation.results.urls[$index].imagesZipUrls">
+            <a ng-href="{{url}}"><span class="fa fa-file-image-o"></span> {{$index+1}}</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+
+    </div>
+  </div>
+</div>
+<!---->

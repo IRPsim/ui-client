@@ -1,0 +1,1 @@
+for y in {2015..2035}; do for g in {15,17,20,22,24,26}; do for s in {7,8,9,10,11,16,18,21,23,25,27}; do echo "year $y, GM $g, SK $s" >> psdsga.txt && curl "http://localhost:9000/backend/simulation/combinedscenario?gm=$g&sk=$s&year=$y" | jq '.years[0].tables.par_S_DS_growth_absolute|keys' >> psdsga.txt; done; done; done;

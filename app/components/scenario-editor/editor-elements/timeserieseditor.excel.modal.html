@@ -1,0 +1,48 @@
+
+<div class="modal-header">
+  <h3 class="modal-title"><strong style="padding-left: 15px">Zeitreihendaten bearbeiten</strong></h3>
+  <span style="padding-left: 15px">{{title}}</span>
+</div>
+
+
+<div class="modal-body">
+  <div class="row">
+    <!-- Textarea -->
+    <div class="col-md-4 col-md-offset-1 form-group">
+      <textarea style="max-width: 100%; min-width: 100%" class="form-control" ng-model="rawData" cols="25" rows="13" ng-change="changeCount()"> </textarea>
+    </div>
+
+    <div class="alert alert-info col-md-5 col-md-offset-1">
+      <strong>Hinweis: </strong>
+      <ul>
+        <li>Hier können Zeitreihendaten aus Excel-Dokumenten
+          spaltenweise eingefügt werden. (Bzw. umgekehrt)
+        </li>
+        <li>Spalten-header werden automatisch aus der Datenstruktur entfernt.
+        </li>
+        <li ng-show="lengthIsSet">Die Zeitreihendaten besitzen immer eine feste Größe von {{maxLength.join(', ')}} Elementen!
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--eo row-->
+
+  <div class="row" ng-if="info">
+    <div class="col-md-10 col-md-offset-1"
+         ng-class="{1:'alert alert-success', 2:'alert alert-info', 3:'alert alert-warning', 4:'alert alert-danger'}[info.item]">
+      <h3>Information:</h3>
+      <span style="font-size:80%">{{info.text}}{{infoItemDynamic.text}}</span>
+    </div>
+  </div>
+
+
+</div>
+<!--eo body-->
+
+<div class="modal-footer">
+  <div style="padding-left: 15px">
+    <button class="btn btn-primary pull-left" ng-click="ok()" ng-disabled="isDisabled">Annehmen</button>
+    <button class="btn btn-danger pull-left" ng-click="cancel()">Abbrechen</button>
+    <button class="btn btn-default pull-right" ng-click="downloadCSV()">CSV herunterladen</button>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+"sets": {
+"set_jj": {
+"description": "Einlesen der Monate",
+"tags": [
+"input"
+],
+"data-type": "string",
+"index": 262,
+"default": [],
+"name": "set_jj",
+"type-details": {},
+"type": "set",
+"subsets": [],
+"hidden": true,
+"identifier": "Monate",
+"supersets": [],
+"attributes": [],
+"dependencies": []
+}
+},
+"tables": {
+"par_X_SS_CHP_NSRenergyLink": {
+"description": "Einlesen Energieverbindung von Kraft-Wärme-Kopplungsanlagen zu Prosumstorer (Vorhaltung)",
+"tags": [
+"input",
+"NSRenergyLink",
+"SS",
+"Statusvariable",
+"Zentrale Erzeugungsseite",
+"Blockheizkraftwerk",
+"CHP",
+"X"
+],
+"data-type": "boolean",
+"index": 129,
+"default": 0,
+"name": "par_X_SS_CHP_NSRenergyLink",
+"type-details": {
+"description": "NSRenergyLink",
+"module-raw": "SS",
+"type": "Statusvariable",
+"module": "Zentrale Erzeugungsseite",
+"reference": "Blockheizkraftwerk",
+"reference-raw": "CHP",
+"type-raw": "X",
+"description-raw": "NSRenergyLink"
+},
+"type": "parameter",
+"identifier": "Energieverbindung von Kraft-Wärme-Kopplungsanlagen zu Prosumstorer (Vorhaltung)",
+"domain": {
+"values": [
+0,
+1
+]
+},
+"dependencies": [
+]
+}
+},

@@ -1,0 +1,36 @@
+<form>
+  <div class="form-group">
+    <label for="masterdataselector">Stammdatum:</label>
+    <tags-input id="masterdataselector" replaceSpacesWithDashes="false"
+                placeholder="Name des Stammdatums" ng-model="masterData"
+                on-tag-adding="rejectAddingTooManyTags($tag)"
+                key-property="idx"
+                add-from-autocomplete-only="true" template="own-tag-template"
+                max-tags="1">
+      <auto-complete template="own-autocomplete-template" load-on-empty="true" load-on-focus="true" min-length="0"
+                     source="loadTags($query)"></auto-complete>
+    </tags-input>
+
+    <!--Templates for tags and autocomplete-->
+    <script type="text/ng-template" id="own-tag-template">
+      <div class="tag-template">
+        <div>
+          <span><b>{{data.name}}</b> <i>[ {{data.typ + ", " + data.bezugsjahr}} ]</i></span>
+          <a class="remove-button" ng-click="$removeTag()">&#10006;</a>
+        </div>
+      </div>
+    </script>
+    <script type="text/ng-template" id="own-autocomplete-template">
+      <div class="tag-template">
+        <div>
+          <span><b>{{data.name}}</b> <small>[{{data.typ + ", " + data.bezugsjahr}}]</small></span>
+        </div>
+      </div>
+    </script>
+  </div>
+  <button class="btn btn-default btn-primary"
+          ng-disabled="masterData.length === 0"
+          ng-click="selectMasterData(masterData)">Hinzufügen
+  </button>
+</form>
+

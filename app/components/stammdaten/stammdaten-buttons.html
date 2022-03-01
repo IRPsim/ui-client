@@ -1,0 +1,37 @@
+<!-- buttons -->
+<div style="white-space: nowrap; margin-left:10px">
+  <div>
+    <a style="margin-right:5px; text-decoration: none; cursor: pointer"
+            ng-disabled="grid.appScope.isEditing"
+            title="Stammdatum bearbeiten"
+            ng-click="grid.appScope.onEdit(row.entity)">
+      <i class="fa fa-pencil" title="Bearbeiten"></i>
+    </a>
+    <a style="margin-right:5px; text-decoration: none; cursor: pointer"
+            title="Stammdatum kopieren"
+            ng-disabled="grid.appScope.isEditing"
+            ng-click="grid.appScope.onCopy(row.entity)">
+      <i class="fa fa-copy"></i>
+    </a>
+    <a style="margin-right:5px; text-decoration: none; color: rgb(217, 83, 79); cursor: pointer"
+            title="Stammdatum löschen"
+            ng-if="!grid.appScope.hasDescendants(row.entity)"
+            ng-disabled="isEditing"
+            ng-confirmed-click="grid.appScope.onDelete(row.entity)"
+            ng-confirmed-click-message="Soll der Stammdatensatz &quot;{{grid.appScope.getView(row.entity, 'name')}}&quot; wirklich gelöscht werden?">
+      <i class="fa fa-remove"></i>
+    </a>
+
+    <a style="text-decoration: none; margin-right: 5px; cursor: pointer"
+       href="{{grid.appScope.getExcelLink(row.entity)}}"
+       ng-show="!row.entity.abstrakt && grid.appScope.isComplete(row.entity)"
+       title="Excelvorlage herunterladen" target="_blank">
+      <i class="fa fa-file-excel-o"></i>
+    </a>
+    <a style="text-decoration: none; cursor: pointer"
+      title="Algebraischen Datensatz definieren"
+      ng-click="grid.appScope.defineAlgebraicDataset(row.entity)">
+      <i class="fa fa-terminal"></i>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+{
+  "id": 3,
+  "name": "TimeseriesQuarter",
+  "typ": "par_R_MS_E_resneg_provision",
+  "zeitintervall": "QUARTERHOUR",
+  "abstrakt": false,
+  "referenz": null,
+  "szenarien": [
+    "Leme A",
+    "Leme B"
+  ],
+  "bezugsjahr": 2015,
+  "prognoseHorizont": 2,
+  "verantwortlicherPrognosejahr": {
+    "name": "sfd",
+    "email": "asdf@sadasdas"
+  },
+  "verantwortlicherBezugsjahr": {
+    "name": "das",
+    "email": "asd@sad.de"
+  }
+}

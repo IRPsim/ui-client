@@ -1,0 +1,92 @@
+<div class="container-fluid" style="height: 100%">
+  <div layout="column" style="height: 100%">
+    <div flex="nogrow">
+      <div class="row">
+        <h3 style="display:inline-block">Jobverwaltung</h3>
+        <button style="margin-top: 15px" class="btn btn-default pull-right"
+                ng-click="reloadTableData()">
+            <span class="fa fa-refresh"
+                  ng-class="{'fa-spin': loading}"></span> Aktualisieren
+        </button>
+      </div>
+    </div>
+    <div flex="" class="table-responsive" style="box-shadow: -0px 0 7px lightgrey; margin-top:5px; margin-bottom: 5px">
+      <table class="table">
+        <thead>
+        <tr>
+          <th style="padding-bottom: 15px">ID</th>
+          <th style="padding-bottom: 15px">Fortschritt</th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.creator"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Ersteller" style="min-width: 60px;"
+                     title="Ersteller"/></th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.businessModelDescription"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Modellbeschreibung"
+                     style="min-width: 130px;" title="Modellbeschreibung"/></th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.investmentCustomerSide"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Ausprägung" style="min-width: 110px;"
+                     title="Ausprägung"/></th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.parameterAttention"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Parameteraugenmerk"
+                     style="min-width: 130px;" title="Parameteraugenmerk"/></th>
+          <th><input type="text" class="form-control" ng-model="filteroptions.supportiveYears"
+                     ng-model-options="{debounce: {'default': 400}}" placeholder="Stützjahre" style="min-width: 80px;"
+                     title="Parameteraugenmerk"/></th>
+          <th style="padding-bottom: 15px">Startzeit</th>
+          <th style="padding-bottom: 15px">Endzeit</th>
+          <th style="padding-bottom: 15px">Erstellt</th>
+          <th style="padding-bottom: 15px">Größe</th>
+          <th style="padding-bottom: 15px">Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- TODO render waiting simulations separately -->
+        <tr ng-repeat="simulation in simulations | filter: entryGetsFiltered track by simulation.id"
+            ng-class="{active: checkResult(simulation) === 'running',
+                       success: checkResult(simulation) === 'finished',
+                       danger: checkResult(simulation) === 'error'}"
+            ng-drag="{{simulation.state === 'WAITING'}}"
+            ng-drop="{{simulation.state === 'WAITING'}}"
+            ng-drag-data="simulation"
+            ng-drop-success="onDropComplete($index, $data,$event)">
+          <td>
+            <span class="fa fa-remove fa-hover pull-left"
+                  title="{{simulation.running?'Abbrechen':'Löschen'}}"
+                  ng-confirmed-click-message="{{'Soll die Simulation <strong>'+simulation.id+'</strong> wirklich ' + (simulation.running?'gestoppt':'gelöscht') +' werden?'}}"
+                  ng-confirmed-click="stopSimulation(simulation.id, !simulation.running)">
+            </span>
+            <span class="fa fa-download fa-hover pull-left"
+                  title="{{(checkResult(simulation) === 'running')?'Zwischenergebnisse anzeigen':'Ergebnisse anzeigen'}}"
+                  ng-click="attachToRunningSimulation(simulation)"></span>
+            <span class="fa fa-plus fa-hover pull-left"
+                  title="Ergebnisse vergleichen"
+                  ng-if="result.years && checkResult(simulation) === 'finished' && !Simulations.hasAlreadyBeenAdded(simulation.id)"
+                  ng-click="addResults(simulation)"></span>
+            {{simulation.id}}
+          </td>
+          <td>{{calculatePercentage(simulation)}}</td>
+          <td>{{simulation.description.creator}}</td>
+          <td>{{simulation.description.businessModelDescription}}</td>
+          <td>{{simulation.description.investmentCustomerSide}}</td>
+          <td>{{simulation.description.parameterAttention}}</td>
+          <td>
+            <span ng-repeat="(idx,data) in simulation.yearStates"
+                  title="{{convertTime(data.start) ? convertTime(data.start) + ' Uhr' : 'Keine Startzeit verfügbar' }}"
+                  style="padding-right: 5px;">{{data.year}}</span>
+          </td>
+          <td>{{convertTime(simulation.start)}}</td>
+          <td>{{calculateEndTime(simulation)}}</td>
+          <td>{{convertTime(simulation.creation)}}</td>
+          <td>{{getSimulationLength(simulation)}}</td>
+          <td>{{simulation.state}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div flex="nogrow">
+      <div class="row alert alert-info">
+        <span class="glyphicon glyphicon-info-sign"></span>Optimierungsläufe in der Warteschlange (Status:
+        <i>WAITING</i>) können jederzeit per Drag'n'Drop umsortiert werden.
+      </div>
+    </div>
+  </div>
+</div>

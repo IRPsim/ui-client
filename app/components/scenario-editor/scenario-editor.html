@@ -1,0 +1,194 @@
+<h1>{{scenarioEditorCtrl.modelName}}</h1>
+
+<div class="row">
+  <div style="padding-right: 60px" class="col-md-12">
+
+    <!-- Foldable right navigation -->
+    <fixed-nav-right class="hidden-print" print="scenarioEditorCtrl.print">
+
+      <!-- Print Button -->
+      <fixed-nav-panel icon="glyphicon glyphicon-print" onlybutton="togglePrint" title="Druckansicht">
+
+      </fixed-nav-panel>
+      <!-- Scenario management button and menu -->
+      <fixed-nav-panel icon="glyphicon glyphicon-list-alt" title="Szenarioverwaltung">
+        <scenario-table-editor
+          type="{{scenarioEditorCtrl.type}}" scenario="scenarioEditorCtrl.scenario"
+          info="scenarioEditorCtrl.info"
+          loaded-scenario-description="scenarioEditorCtrl.loadedScenarioDescription"></scenario-table-editor>
+      </fixed-nav-panel>
+
+      <!-- Job management button and menu  -->
+      <fixed-nav-panel icon="glyphicon glyphicon-tasks" title="Jobverwaltung">
+        <result-table-editor type="{{scenarioEditorCtrl.type}}"
+                             info="scenarioEditorCtrl.info"
+                             result="scenarioEditorCtrl.results"
+                             description="scenarioEditorCtrl.description"></result-table-editor>
+      </fixed-nav-panel>
+
+      <!-- Job control and menu -->
+      <fixed-nav-panel icon="glyphicon glyphicon-wrench" title="Jobsteuerung">
+        <simulation-controls
+          type="scenarioEditorCtrl.type" scenario="scenarioEditorCtrl.scenario"
+          result="scenarioEditorCtrl.result" info="scenarioEditorCtrl.info" description="scenarioEditorCtrl.description"></simulation-controls>
+      </fixed-nav-panel>
+      <!-- Scenario information button and menu -->
+      <fixed-nav-panel icon="glyphicon glyphicon-info-sign" title="Anwendungsinfos">
+        <h3>Szenarioinformationen</h3>
+
+        <div class="table-responsive" style="max-height: 400px; padding-top: 30px">
+          <table class="table table-condensed">
+            <thead>
+            <tr>
+              <th>frontendversion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td></td><!-- Gets replaces with hash on build -->
+            </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-condensed">
+            <thead>
+            <tr>
+              <th ng-repeat="(key, value) in scenarioEditorCtrl.info track by $index"> {{key}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td ng-repeat="(key, value) in scenarioEditorCtrl.info track by $index">{{value}}</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <table class="table table-condensed">
+            <thead>
+            <tr>
+              <th ng-repeat="col in ['id','name', 'type', 'description', 'version'] track by $index"> {{col}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="row in scenarioEditorCtrl.modelDefinitions track by $index">
+              <td>{{row.id}}</td>
+              <td>{{row.name}}</td>
+              <td>{{row.type}}</td>
+              <td>{{row.description}}</td>
+              <td>{{row.version}}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+        <!--        <div>{{scenarioEditorCtrl.modelDefinitions | json}}</div>-->
+        <button class="btn btn-default btn-primary" ng-click="clearLocalStorage()"
+                title="Beim nächsten Laden der Seite wird die UI-Struktur und das Standardszenario neu vom Backend geladen">
+          <span class="fa fa-eraser"></span> Cache löschen
+        </button>
+        <div class="form-group bg-warning pull-right" style="width: 300px">
+          <label for="uistructureinput">Frontendstrukturen testen</label>
+          <input type="file" id="uistructureinput" on-read-file="setUIStructure($fileContent)">
+          <p class="help-block">Nur für die Entwicklung von Modell und Frontend gedacht. Uploadmöglichkeit für
+            UI-Strukturen</p>
+        </div>
+      </fixed-nav-panel>
+      <!-- Messages button and menu -->
+      <fixed-nav-panel icon="glyphicon glyphicon-alert" title="Meldungen">
+        <div layout="column" style="height: 100%">
+          <div flex="nogrow">
+            <h3>Logbetrachter
+              <div class="btn-group-sm pull-right" role="group">
+                <button type="button" class="btn btn-default btn-secondary"
+                        ng-click="clearLog()"
+                        title="Alle Logeinträge löschen">
+                  <span class="fa fa-trash"></span> Alle Logs
+                </button>
+                <button type="button" class="btn btn-secondary btn-danger"
+                        ng-click="clearLog('error')"
+                        title="Alle Fehlermeldungen löschen">
+                  <span class="fa fa-trash"></span> Fehlermeldungen
+                </button>
+                <button type="button" class="btn btn-secondary btn-warning"
+                        ng-click="clearLog('warning')"
+                        title="Alle Warnungen löschen">
+                  <span class="fa fa-trash"></span> Warnungen
+                </button>
+              </div>
+            </h3>
+          </div>
+          <div flex="nogrow" ng-if="!logs.length">
+            <p>Keine Logs vorhanden</p>
+          </div>
+          <div flex="" ng-if="logs.length">
+            <div layout="column" style="height: calc(100%)">
+              <div flex="" class="table-responsive" style="margin-top: 30px">
+                <table class="table table-condensed table-hover">
+                  <thead>
+                  <tr>
+                    <th>Level</th>
+                    <th>Titel</th>
+                    <th>Nachricht</th>
+                    <th colspan="2">Zeit</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="log in logs | orderBy:'date':true | limitTo:maxRows track by log.id"
+                      ng-class="{'danger': log.severity==='error', 'warning': log.severity==='warning', 'success': log.severity==='success', 'info': log.severity==='info'}"
+                      title="{{log.count}} Meldung{{log.count>1?'en':''}}">
+                    <td>{{log.severity}}</td>
+                    <td>{{log.title}}</td>
+                    <td><span ng-bind-html="log.text"></span>{{log.count>1? ' (x'+log.count+')':''}}</td>
+                    <td>{{log.date|date:'HH:mm:ss'}}</td>
+                    <td>
+                      <a href="" ng-click="removeLogEntry(log.id)" title="Logeintrag löschen">
+                        <span class="fa fa-remove"></span>
+                      </a>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div flex="nogrow">
+              <span ng-class="{'bg-info': logs.length>maxRows}">
+                <strong>{{logs.length}}</strong> Meldungen insgesamt
+              </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fixed-nav-panel>
+    </fixed-nav-right>
+
+    <!-- Show infos like backend version when printing -->
+    <dl class="dl-horizontal"
+        ng-if="scenarioEditorCtrl.print"
+        ng-repeat="(key, value) in scenarioEditorCtrl.info">
+      <dt>{{key}}:</dt>
+      <dd>{{value}}</dd>
+    </dl>
+
+    <!-- Tabs for scenario configuration -->
+    <uib-tabset active="scenarioEditorCtrl.activeTab">
+      <!-- Set input tabs -->
+      <uib-tab heading="{{'Eingaben ' + getModelNames(scenarioEditorCtrl.modelDefinitionIds[$index])}}" ng-repeat="scenario in scenarioEditorCtrl.scenario" index="$index">
+        <scenario-configurator tag="input"
+                               scenario="scenarioEditorCtrl.scenario[$index]"
+                               type="{{scenarioEditorCtrl.type}}"
+                               print="scenarioEditorCtrl.print"
+                               loaded-scenario-description="scenarioEditorCtrl.loadedScenarioDescription">
+        </scenario-configurator>
+      </uib-tab>
+      <!-- Set output tabs -->
+      <uib-tab heading="{{'Ergebnisse ' + getModelNames(scenarioEditorCtrl.modelDefinitionIds[$index])}}" ng-repeat="result in scenarioEditorCtrl.results" index="$index + scenarioEditorCtrl.scenario.length">
+        <scenario-configurator tag="output"
+                               scenario="scenarioEditorCtrl.results[$index]"
+                               type="{{scenarioEditorCtrl.type}}"
+                               print="scenarioEditorCtrl.print"
+                               loaded-scenario-description="scenarioEditorCtrl.loadedScenarioDescription">
+        </scenario-configurator>
+      </uib-tab>
+    </uib-tabset>
+  </div>
+</div>

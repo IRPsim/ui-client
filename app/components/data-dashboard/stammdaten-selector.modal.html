@@ -1,0 +1,17 @@
+<div class="modal-header">
+  <h3 class="modal-title"><strong style="padding-left: 15px">Stammdatum auswählen</strong></h3>
+  <span style="padding-left: 15px">Variable <i>{{variable}}</i></span>
+</div>
+
+<div class="modal-body">
+  <stammdaten-selector class="row"
+                       hide-abstract="true"
+                       on-select="selectStammdatum(stammdatum)"
+  ></stammdaten-selector>
+</div>
+
+<div class="modal-footer">
+  <div style="padding-left: 15px">
+    <button class="btn btn-danger pull-left" ng-click="cancel()">Abbrechen</button>
+  </div>
+</div>

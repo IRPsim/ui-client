@@ -1,0 +1,463 @@
+/*
+  http://stackoverflow.com/questions/11249768/angularjs-ng-cloak-ng-show-elements-blink
+
+  Allow angular.js to be loaded in body, hiding cloaked elements until
+  templates compile.  The !important is important given that there may be
+  other selectors that are more specific or come later and might alter display.
+ */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+  display: none !important;
+}
+
+.extra-large-modal .modal-dialog{
+  width: 90vw;
+}
+
+.simulation-options .row {
+  margin-bottom: 10px;
+}
+
+.simulation-options {
+  margin-bottom: 30px;
+}
+
+.simulation-options p {
+  padding-top: 10px;
+
+}
+
+/* Space out content a bit */
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+  padding-bottom: 19px;
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* Customize container */
+@media (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+}
+
+.marketing p + h4 {
+  margin-top: 28px;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
+
+/* styling of <input type="file"> */
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+/* keep page menus at the top when scrolling*/
+.nav.pagemenu.affix {
+  top: 0;
+  margin-top: 0;
+}
+
+/* pagemenu for simulation model */
+/* always show top level elements in the menus */
+.pagemenu li > a {
+  display: none;
+  padding: 0;
+}
+
+/* emphasis currently active item */
+.pagemenu li.active > a {
+  border-left: 2px solid;
+  font-weight: bold;
+  display: block;
+}
+
+/* show currently active item */
+.pagemenu li.active > .nav > li > a {
+  display: block;
+}
+
+.pagemenu > li > a {
+  display: block;
+}
+
+/* indent 2nd layer */
+.pagemenu .nav > li > a {
+  margin-left: 20px;
+  padding-left: 10px;
+}
+
+/* indent 3rd layer */
+.pagemenu .nav > li > .nav > li > a {
+  margin-left: 40px;
+  padding-left: 10px;
+}
+
+.table-responsive > .sticky-header {
+  position: absolute;
+  display: inline-block;
+  width: auto;
+  border-right: 1px solid #ddd;
+  background-color: #fff;
+  z-index: 100;
+}
+
+/*@media(min-width:768px) {*/
+/*.table-responsive>.stickyHeader {*/
+/*display: none;*/
+/*}*/
+/*}*/
+
+@media print {
+
+  a[href]:after {
+    content: none;
+  }
+
+  tags-input {
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  .break-after{
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+
+  edit-table{
+    page-break-inside: avoid;
+  }
+
+  .nav-tabs {
+    display: none;
+  }
+
+  /* show several tab panes one below the other for printing */
+  .tab-content > .tab-pane {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important
+  }
+
+}
+
+.zoomable-normal{
+  width: 100%;
+}
+.zoomable-print{
+  width: 500px;
+}
+
+/* Validation */
+.ng-invalid.ng-dirty {
+  border-color: red;
+  outline-color: red;
+}
+
+span.tree-label {
+  word-wrap: break-word;
+}
+
+/* fa icon hover option */
+.fa-hover {
+  opacity: 0.3
+}
+.fa-hover:hover {
+  opacity: 0.7
+
+}
+.btn-hover {
+  background-color: whitesmoke;
+}
+
+.btn-hover:hover {
+  background-color: lightgrey;
+}
+
+.hover:hover {
+  background-color: #f5f5f5;
+}
+
+.editable-error{
+  margin-bottom: 0;
+  white-space: pre; /* wrap error messages per sentence*/
+}
+
+.aggChart .dygraph-legend {
+  width: 700px !important;
+}
+/* drag n drop of elements */
+[ng-drag]{
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+[ng-drag].dragging{
+  cursor: move;
+  opacity: 0.8;
+  background-color: rgba(255, 155, 0,  0.8) !important;
+  border: 2px dotted #5d5d5d;
+}
+/* migration to newest angular-bootstrap, needs special css because empty href get removed*/
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.abstract {
+  font-style: italic;
+}
+
+/* style for typeaheads with custom templates */
+
+.scrollable-typeahead .dropdown-menu {
+  max-height: 325px;
+  overflow-y: auto;
+}
+
+.custom-typeahead ul {
+  width: 100% !important;
+}
+
+.custom-typeahead .dropdown-menu li {
+  border-bottom: 1px dotted rgb(0, 0, 0);
+}
+
+.custom-typeahead .dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.custom-typeahead .headline {
+  font-style: italic;
+}
+
+.custom-typeahead .metadata {
+  font-size: 8pt;
+  margin: 10px 0 5px 0;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.custom-typeahead .description {
+  font-size: 8pt;
+  margin: 0px 0 5px 0;
+  overflow: hidden;
+  white-space: normal;
+}
+
+.set-typeahead ul {
+  width: 300px !important;
+}
+
+/* GDX Export Styles */
+
+.spinner {
+  margin: 5px auto;
+  width: 50px;
+  height: 40px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.spinner > div {
+  background-color: #152b75;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% {
+       transform: scaleY(1.0);
+       -webkit-transform: scaleY(1.0);
+     }
+}
+
+.show-gdx-form {
+  transition: all linear 0.5s;
+}
+.show-gdx-form.ng-hide {
+  opacity: 0;
+}
+
+.gdx-filter-form-hr {
+  border:none;
+  border-top:1px #e5e5e5 solid;
+  height: 1px;
+  margin: 25px 0 25px 0;
+}
+
+.gdx-filter-hr {
+  border:none;
+  border-top:1px #CCCCCC dashed;
+  height: 1px;
+  margin: 25px 0 25px 0;
+}
+
+.focusedInput {
+  border-color: #ccc;
+  border-color: rgba(82,168,236,.8);
+  outline: 0;
+  outline: thin dotted\9;
+  -webkit-box-shadow: 0 0 8px rgba(82,168,236,.6);
+  box-shadow: 0 0 8px rgba(82,168,236,.6);
+}
+
+.graphimage-container {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.graphimage-container .button-container {
+  opacity: 0;
+  position: absolute;
+  -webkit-transition: opacity 600ms, visibility 600ms;
+  right: 2rem;
+  transition: opacity 600ms, visibility 600ms;
+  visibility: hidden;
+  z-index: 500;
+}
+
+.graphimage-container:hover .button-container {
+  opacity: 1;
+  visibility: visible;
+}
+
+#image-container {
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+}
+
+
+#image-container .spinner {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#graph-image {
+  width: 100%;
+}
+
+/* Fix for ui-grid dropdown text placement, used in "Verwaltung von Stammdaten" (overrides class from ui-grid.css) */
+.ui-grid-pager-row-count-picker select {
+  padding: 3px 10px;
+}

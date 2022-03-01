@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h3 class="modal-title">Zeitreihen-Daten für Stammdaten importieren</h3>
+</div>
+
+<div class="modal-body container">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="upload"
+           style="border: 2px dashed grey; height:100px; width:100%; display:inline-block; text-align: center;"
+           ngf-drop ngf-select ng-model="files" ngf-multiple="true" ngf-allow-dir="false">
+        <p style="color:grey; font-size: 12px; margin-top: 20px">Datei(en) per Drag'n'Drop ablegen<br/>oder<br/> hier klicken für Auswahldiaglog</p>
+      </div>
+    </div>
+    <div class="col-md-6 table-responsive" style="max-height:150px">
+      <table class="table table-striped" ng-show="files && files.length > 0">
+        <tr>
+          <th>Index</th>
+          <th>Name</th>
+          <th>Fortschritt</th>
+        </tr>
+        <tr ng-style="{'background-color': f.success ? '#dff0d8' : f.error ? '#f2dede' : 'rgba(240, 173, 78, 0.5)' }"
+            ng-repeat="f in files track by $index">
+          <td>{{$index + 1}}</td>
+          <td>{{f.name}}</td>
+          <td>{{f.message || (f.progress + ' %')}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-warning" type="button" ng-click="vm.cancel()">Schließen</button>
+</div>
+
+

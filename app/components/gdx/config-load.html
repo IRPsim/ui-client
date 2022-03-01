@@ -1,0 +1,63 @@
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
+<md-dialog>
+  <form ng-cloak>
+
+    <div class="modal-header">
+      <h3 class="modal-title"><strong style="padding-left: 15px">Konfigurationen</strong></h3>
+    </div>
+
+    <div class="modal-body">
+      <table>
+        <thead>
+        <tr>
+          <th ng-repeat="col in ['Id', 'Name', 'Ersteller', 'Laden', 'Löschen']"> {{col}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="config in configs track by $index">
+          <td>{{ config.id }}</td>
+          <td>{{ config.name }}</td>
+          <td>{{ config.creator }}</td>
+          <td>
+            <md-button class="fa fa-download"
+                       title="Lade Konfiguration"
+                       aria-label="." ng-attr-aria-label="{{ config.id }}"
+                       ng-click="load(config.data)">
+            </md-button>
+          </td>
+          <td>
+            <md-button class="fa fa-trash"
+                       title="Lösche Konfiguration"
+                       aria-label="." ng-attr-aria-label="{{ config.id }}"
+                       ng-click="delete(config.id)">
+            </md-button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-footer">
+      <div style="padding-left: 15px">
+        <button class="btn btn-danger pull-left" ng-click="cancel()">Schließen</button>
+      </div>
+    </div>
+
+  </form>
+</md-dialog>

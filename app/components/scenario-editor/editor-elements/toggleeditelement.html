@@ -1,0 +1,16 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-left">
+      <h4 id="elementId{{::id}}">{{heading}}</h4>
+    </div>
+    <button class="pull-right btn btn-default glyphicon glyphicon-off"
+            ng-click="callback()">
+    </button>
+    <div class="clearfix"></div>
+  </div>
+  <div class="panel-body" style="overflow-x: auto">
+    <p><div ng-bind-html="description"></div></p>
+    <div ng-transclude></div>
+  </div>
+</div>
+

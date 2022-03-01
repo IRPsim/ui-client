@@ -1,0 +1,141 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="pull-left">
+      <h4 id="elementId{{::id}}">{{selectedElement.label || definition.identifier}}
+      </h4>
+    </div>
+    <div class="pull-right hidden-print">
+      <button class="btn btn-default"
+              title="Umschalten der Darstellung"
+              ng-click="toggleUIStyle()">
+        <span class="fa fa-square-o">/</span>
+        <span class="fa fa-columns">/</span>
+        <span class="fa fa-table"></span>
+      </button>
+      <button class="btn btn-default glyphicon glyphicon-pushpin"
+              title="Behalte aktuelles Element im Menü auf der rechten Seite."
+              ng-click="pinSelectedElement()">
+      </button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <div class="panel-body">
+    <div ng-bind-html="selectedElement.description"></div>
+    <div ng-if="selectedElement.contents" ng-switch on="uiStyle">
+      <div ng-switch-when="table">
+        <button type="button"
+                ng-if="!definition.hidden"
+                class="btn alert alert-success hidden-print"
+                ng-click="addSetMember(definition.name)"
+                ng-hide="readOnly">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+            <tr>
+              <th></th>
+              <th ng-repeat="name in set.names">
+                <span ng-if="!readOnly && !definition.hidden">
+                <span editable-text="set.names[$index]"
+                      uib-tooltip="{{selectedElement.set}}"
+                      e-uib-typeahead="elem.member for elem in potentialSetElements | filter:{member:$viewValue, set:selectedElement.set} | limitTo:5"
+                      e-typeahead-min-length="0"
+                      onbeforesave="renameSetMember(definition.name,$index,$data)">{{name}}</span>
+                <a class="pull-right"
+                   ng-confirmed-click="removeSetMember(definition.name,$index)"
+                   ng-confirmed-click-message="Soll {{name}} wirklich gelöscht werden?"
+                   ng-hide="readonly">
+                  <span class="glyphicon glyphicon-remove"></span></a>
+                </span>
+                <span ng-if="readOnly || definition.hidden">{{name}}</span>
+              </th>
+              <th ng-if="readOnly" ng-repeat="name in set.names">
+                {{name}}
+              </th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <!--
+            definitionWithoutData assumes we are interested in a specific set element. This old tabular logic needs to render a cell
+            for each set element, though, independent of the question whether or not the columns set element has a value for the current row
+            parameter or not. So we just use the name of the first set element set.names[0].
+            -->
+            <tr ng-repeat="attribute in selectedElement.contents | filter:definitionWithoutData(selectedElement,['attributes'],set.names[0]) track by $index">
+              <th><span uib-tooltip="{{findAttributeDefinition(attribute).description}}">{{findAttributeDefinition(attribute).identifier}}</span></th>
+              <td ng-repeat="elemName in set.names" style="min-width:400px">
+                <edit-single-value definition="findAttributeDefinition(attribute)"
+                                   series-group="{{definition.name + elemName}}"
+                                   aggregates="findAggregates(attribute,elemName)"
+                                   data="findSetAttribute(selectedElement.set,elemName,attribute.name)"
+                                   location="['sets',elemName,attribute.name]"
+                                   context="{setName1: selectedElement.set, setElement1: elemName, modelType: type}"
+                                   validator="changeValidator(validationEvent)"
+                                   element-name="{{elemName}}"
+                                   read-only="{{readOnly}}"
+                                   length="{{scenario.config.simulationlength}}"
+                                   scenario="scenario.config.scenario.value"
+                                   base-year="{{multiYearScenario.years[0].config.year.value}}"
+                                   current-year="{{scenario.config.year.value}}"
+                                   timestep="{{scenario.config.timestep}}"></edit-single-value>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div ng-repeat="table in tables | filter:isTableFiltered track by table.definition.name">
+            <h3>{{table.definition.identifier}}</h3>
+            <edit-table></edit-table>
+          </div>
+        </div>
+      </div>
+      <div ng-switch-when="tabs">
+        <set-attributes-tab></set-attributes-tab>
+      </div>
+      <div ng-switch-when="twoTabs"
+           class="row">
+        <set-attributes-tab class="col-md-6"></set-attributes-tab>
+        <set-attributes-tab class="col-md-6"></set-attributes-tab>
+      </div>
+      <div ng-switch-when="print">
+        <div class="panel panel-default"
+             ng-repeat="name in set.names">
+          <div class="panel-heading">
+            <h5>{{name}}</h5>
+          </div>
+          <div class="panel-body">
+            <span ng-repeat="attribute in selectedElement.contents | filter:definitionWithoutData(selectedElement,['attributes']) track by $index">
+              <strong>{{findAttributeDefinition(attribute).identifier}}</strong>
+              <edit-single-value definition="findAttributeDefinition(attribute)"
+                                 data="findSetAttribute(selectedElement.set,name,attribute.name)"
+                                 element-name="{{name}}"
+                                 length="{{scenario.config.simulationlength}}"
+                                 scenario="scenario.config.scenario.value"
+                                 base-year="{{multiYearScenario.years[0].config.year.value}}"
+                                 current-year="{{scenario.config.year.value}}"
+                                 timestep="{{scenario.config.timestep}}"
+                                 read-only="{{readOnly}}"
+                                 isforprint="isforprint"></edit-single-value>
+            </span>
+            <span ng-repeat="table in tables">
+              <h5>{{table.definition.identifier}}</h5>
+              <span ng-repeat="otherSetName in table.otherSetsNames">
+                <strong>{{otherSetName}}</strong>
+                <edit-single-value definition="table.definition"
+                                   data="table.data[name][otherSetName]"
+                                   element-name="{{otherSetName}}"
+                                   length="{{scenario.config.simulationlength}}"
+                                   scenario="scenario.config.scenario.value"
+                                   base-year="{{multiYearScenario.years[0].config.year.value}}"
+                                   current-year="{{scenario.config.year.value}}"
+                                   timestep="{{scenario.config.timestep}}"
+                                   read-only="{{readOnly}}"
+                                   isforprint="isforprint"></edit-single-value>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

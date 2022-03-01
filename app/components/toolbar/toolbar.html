@@ -1,0 +1,33 @@
+<div class="header">
+  <div class="row">
+    <ul class="nav nav-pills pull-right hidden-print" ng-cloak>
+      <li ng-class="{ active: $state.includes('models')}" ng-repeat="model in $ctrl.modelDefinitions track by $index" ng-click="$ctrl.setModelName(model)">
+        <a ui-sref="models.basic({modelDefinitionId: model.id})">{{model.name}}</a>
+      </li>
+      <li uib-dropdown  ng-class="{ active: $state.includes('stammdaten')}">
+        <a uib-dropdown-toggle>Stammdaten <span class="caret"></span></a>
+        <ul uib-dropdown-menu>
+          <li ui-sref-active="active"><a ui-sref="stammdaten.stammdaten">Stammdaten</a></li>
+          <li ui-sref-active="active"><a ui-sref="stammdaten.prognoseszenarien">Prognoseszenarien</a></li>
+        </ul>
+      </li>
+      <li ng-class="{ active: $state.includes('powerprofiles')}">
+        <a ui-sref="powerprofiles.rlm-timeseries-test">Zeitreihenanzeige</a>
+      </li>
+      <li ng-class="{ active: $state.includes('gdx.filter')}">
+        <a ui-sref="gdx.filter">GDX</a>
+      </li>
+      <li uib-dropdown ng-class="{ active: $state.includes('about')}">
+        <a uib-dropdown-toggle>Dokumentation <span class="caret"></span></a>
+        <ul uib-dropdown-menu>
+          <li ui-sref-active="active"><a ui-sref="about.description">Projekt</a></li>
+          <li ui-sref-active="active"><a ui-sref="about.documentation">Handbuch</a></li>
+        </ul>
+      </li>
+    </ul>
+    <a ng-href="{{host === 'irpsim.uni-leipzig.de' ? 'http://irpsim.uni-leipzig.de/artifacts/navigation.html' : '#/'}}"
+       class="col-md-3">
+      <h3 class="text-muted">IRPsim</h3>
+    </a>
+  </div>
+</div>

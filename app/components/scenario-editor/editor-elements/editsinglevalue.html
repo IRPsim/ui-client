@@ -1,0 +1,129 @@
+<div ng-if="readOnly">
+  <div ng-if="data || aggregates" ng-switch on="definition['data-type']">
+    <div ng-switch-when="float" title="{{data.viewValue || data.value}}">
+      {{data.value | significantNumber: 2}} {{definition.unit}}
+    </div>
+    <div ng-switch-when="integer" title="{{data.viewValue || data.value}}">
+      {{data.value | number: 0}} {{definition.unit}}
+    </div>
+    <div ng-switch-when="boolean">
+      {{data.value?'Ja':'Nein'}}
+    </div>
+    <div ng-switch-when="select">
+      {{data.value}}
+    </div>
+    <div ng-switch-when="floats">
+      <show-aggregates aggregates="aggregates" definition="definition"></show-aggregates>
+      <timeseries-editor data="data.value"
+                         definition="definition"
+                         ng-if="isValidDataTimeseries()"
+                         type="{{definition.name}}"
+                         chart-options="chartOptions"
+                         max-length="length"
+                         series-group="{{seriesGroup}}"
+                         sub-title="{{definition.identifier}}-{{elementName}}"
+                         read-only="readOnly"
+                         timestep="{{timestep}}"
+                         isforprint="isforprint">
+      </timeseries-editor>
+    </div>
+  </div>
+</div>
+
+<div ng-if="!readOnly">
+  <div ng-if="data" ng-switch on="definition['data-type']">
+
+    <div ng-switch-when="float" title="{{'Wert: ' + (data.viewValue || data.value) +
+    (data.sensitivity? ('\nErster Zustand: ' + Sensitivity.getPreviewScalar(data.value, data.sensitivity.range[0], data.sensitivity.mode)
+    + '\nLetzter Zustand: ' + Sensitivity.getPreviewScalar(data.value, data.sensitivity.range[1], data.sensitivity.mode))  : '')}}">
+      <span editable-number="data.viewValue"
+            e-step="any"
+            onbeforesave="validateAndBroadcastChange($data)"
+            onaftersave="setHandMadeValue(data.viewValue)"
+            ng-style="{color: data.sensitivity? 'green' : 'default'}">
+       {{data.viewValue | significantNumber: 2}} {{definition.unit}}
+      </span>
+      <a ng-if="!definition.hideDBSelector" href="" style="margin-left:20px">
+        <span title="Datensatz aus Datenbank laden" class="hidden-print fa fa-database"
+              ng-click="openScalarFromDB()"></span>
+      </a>
+      <a ng-if="!definition.hideDBSelector" href="">
+        <span title="Sensitivität festlegen" class="hidden-print fa fa-sliders"
+              ng-click="changeSensitivity(data.value)"></span>
+      </a>
+      <div>{{stammDatenName}}</div>
+    </div>
+
+    <div ng-switch-when="integer" title="{{'Wert: ' + (data.viewValue || data.value) +
+    (data.sensitivity? ('\nErster Zustand: ' + Sensitivity.getPreviewScalar(data.value, data.sensitivity.range[0], data.sensitivity.mode)
+    + '\nLetzter Zustand: ' + Sensitivity.getPreviewScalar(data.value, data.sensitivity.range[1], data.sensitivity.mode))  : '')}}">
+      <span editable-number="data.viewValue"
+            e-step="1"
+            onbeforesave="validateAndBroadcastChange($data)"
+            onaftersave="setHandMadeValue(data.viewValue)"
+            ng-style="{color: data.sensitivity? 'green' : 'default'}">
+    {{data.viewValue | number: 0}} {{definition.unit}}
+    </span>
+      <a ng-if="!definition.hideDBSelector" href="" style="margin-left:20px">
+        <span title="Datensatz aus Datenbank laden" class="hidden-print fa fa-database"
+              ng-click="openScalarFromDB()"></span>
+      </a>
+      <a ng-if="!definition.hideDBSelector" href="">
+        <span title="Sensitivität festlegen" class="hidden-print fa fa-sliders" ng-click="changeSensitivity(data.value)"
+              ng-if="currentYear === baseYear"></span>
+      </a>
+      <div>{{stammDatenName}}</div>
+    </div>
+
+    <div ng-switch-when="boolean">
+      <span editable-checkbox="data.value"
+            e-title="Vorhanden?"
+            buttons="no"
+            onbeforesave="validateAndBroadcastChange($data)">
+    {{data.value?'Ja':'Nein'}}
+    </span>
+    </div>
+
+    <div ng-switch-when="select">
+      <span editable-select="data.value"
+            e-ng-init="scenario"
+            e-ng-options="s for s in data.values"
+            onbeforesave="validateAndBroadcastChange($data)">
+        {{data.value}}
+      </span>
+    </div>
+
+    <div ng-switch-when="prognoseSzenario">
+      <span ng-if="!data.value"><em>Keine Prognoseszenarien für das Stützjahr definiert</em></span>
+      <span editable-select="data.value"
+         e-ng-init="scenario"
+         e-ng-options="s.name for s in data.values"
+         onbeforesave="setPrognoseSzenario($data)">
+           {{data.value.name}}
+      </span>
+    </div>
+
+    <div ng-switch-when="floats">
+      <timeseries-editor data="data.value"
+                         definition="definition"
+                         sensitivity="data.sensitivity"
+                         ng-if="isValidDataTimeseries()"
+                         type="{{definition.name}}"
+                         chart-options="chartOptions"
+                         max-length="length"
+                         series-group="{{seriesGroup}}"
+                         sub-title="{{definition.identifier}}-{{elementName}}"
+                         read-only="false"
+                         timestep="{{timestep}}"
+                         isforprint="isforprint"
+                         base-year="{{baseYear}}"
+                         scenario="scenario"
+                         on-change="broadcastChange($value)"
+                         current-year="{{currentYear}}"
+                         context="context"
+                         on-sensitivity-click="changeSensitivity(data.value)">
+      </timeseries-editor>
+    </div>
+  </div>
+
+</div>

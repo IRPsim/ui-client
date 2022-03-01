@@ -1,0 +1,91 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-9">
+      <div id="{{::id}}"
+           class="panel panel-default"
+           style="height:600px;"></div>
+    </div>
+    <div class="col-md-3">
+      <!-- edges -->
+      <toggle-edit-element ng-if="graphState.legend['edges']"
+                           heading="{{'Kanten'+(graphState.spec.edges.heading ? ' - '+graphState.spec.edges.heading:'')}}"
+                           callback="toggle('edgeColor')">
+        <div ng-repeat="(_, obj) in graphState.legend['edges']">
+          <div title="{{obj.title}}">
+            <div style="width:30px; height: 10px; margin-right: 20px; display: inline-block;"
+                 ng-style="{'background-color': obj.value}">
+            </div>
+            <span>{{obj.label}}</span>
+          </div>
+        </div>
+      </toggle-edit-element>
+      <toggle-edit-element heading="{{'Formen'+(graphState.spec.nodes.shape.heading ? ' - '+graphState.spec.nodes.shape.heading : '')}}"
+                           ng-if="graphState.legend['shape']"
+                           callback="toggle('shape')">
+        <div ng-repeat="(k, obj) in graphState.legend['shape']">
+          <div title="{{obj.title}}">
+            <img width="30" src="{{getShapeDataURL(obj.value)}}">
+            <span>{{obj.label}}</span>
+          </div>
+        </div>
+      </toggle-edit-element>
+      <toggle-edit-element heading="{{'Füllfarben'+(graphState.spec.nodes.fill.heading ? ' - '+graphState.spec.nodes.fill.heading : '')}}"
+                           ng-if="graphState.legend['fill']"
+                           callback="toggle('fill')">
+        <div ng-repeat="(k, obj) in graphState.legend['fill']">
+          <div title="{{obj.title}}">
+            <div style="width:30px; height: 10px; margin-right: 20px; display: inline-block;"
+                 ng-style="{'background-color': obj.value}">
+            </div>
+            <span>{{k}}</span>
+          </div>
+        </div>
+      </toggle-edit-element>
+      <toggle-edit-element heading="{{'Randfarben'+(graphState.spec.nodes.border.heading ? ' - '+graphState.spec.nodes.border.heading : '')}}"
+                           ng-if="graphState.legend['border']"
+                           callback="toggle('border')">
+        <div ng-repeat="(k, obj) in graphState.legend['border']">
+          <div title="{{obj.title}}">
+            <div style="width:30px; height: 10px; margin-right: 20px; display: inline-block;border: 3px solid"
+                 ng-style="{'border-color': obj.value}">
+            </div>
+            <span>{{k}}</span>
+          </div>
+        </div>
+      </toggle-edit-element>
+      <toggle-edit-element heading="{{'Icons'+(graphState.spec.nodes.icon.heading ? ' - '+graphState.spec.nodes.icon.heading : '')}}"
+                           ng-if="graphState.legend['icon']"
+                           callback="toggle('icon')">
+        <div ng-repeat="(k, obj) in graphState.legend['icon']">
+          <div title="{{k}}">
+            <img src="{{getIconDataURL(obj.value)}}"
+                 width="30"/>
+            <span>{{obj.label}}</span>
+          </div>
+        </div>
+      </toggle-edit-element>
+
+      <edit-element heading="Fehlerhafte/mehrdeutige Konfiguration">
+        <div>
+          <img src="{{getShapeDataURL(getDefaultValue('shape'))}}" width="30" style="margin-right: 20px"/> <span>Form</span>
+        </div>
+        <div>
+          <div style="width:30px; height: 10px; margin-right: 20px; display: inline-block;"
+               ng-style="{'background-color': getDefaultValue('fill')}">
+          </div>
+          <span>Füllfarbe</span>
+        </div>
+        <div>
+          <div style="width:30px; height: 10px; margin-right: 20px; display: inline-block;border: 3px solid"
+               ng-style="{'border-color': getDefaultValue('border')}">
+          </div>
+          <span>Rahmen</span>
+        </div>
+        <div>
+          <img src="{{getIconDataURL(getDefaultValue('icon'))}}" width="30" style="margin-right: 20px"/> <span>Icon</span>
+        </div>
+      </edit-element>
+      </div>
+    </div>
+  </div>
+</div>

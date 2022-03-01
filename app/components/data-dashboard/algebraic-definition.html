@@ -1,0 +1,153 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="form-group" ng-init="formula=''">
+      <div class="col-md-5">
+        <label for="formula" style="display: block">Formel:</label>
+          <textarea placeholder="result = zwölfStundenTakt .* par_W_SS_RC_0" class="span6" name=""
+                    id="formula" cols="30" rows="10" style="width: 100%; max-width: 100%; display: block"
+                    ng-model="formula"></textarea>
+
+        <p ng-if="error" style="color: #c9302c; margin-top: 3px">Syntaxfehler: {{error}}</p>
+
+        <p ng-if="!resultSet" style="color: #c9302c; margin-top: 3px"><i>Hinweis: </i>Es wurde keine Ergebnis Variable
+          angegeben.</p>
+
+        <p ng-if="!stammdatenSet" style="color: #c9302c; margin-top: 3px"><i>Hinweis: </i>Es wurden nicht für alle
+          Variablen Stammdaten selektiert.</p>
+
+
+      </div>
+      <div class="col-md-5 col-md-offset-1">
+        <div class="row" style="background-color: whitesmoke; padding-top:10px; padding-left:30px">
+          <div class="col-md-12">
+            <label style="margin-bottom: 10px" for="param-table">Benötigte Datensätze zur Parametrisierung:</label>
+
+            <div class="table-responsive" style="max-height: 500px">
+              <table id="param-table" class="table table-hover">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Stammdatum</th>
+                  <th>Datensatz</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="p in symbolParams | orderBy: 'variable'">
+                  <td>{{p.variable}}</td>
+                  <td>
+                    <a ng-if="!p.stammdatum" ng-click="openSelectStammdatum(p)" class="btn btn-default btn-sm">
+                      <i class="fa fa-plus"></i> Stammdatum selektieren
+                    </a>
+
+                    <i ng-if="p.stammdatum">
+                      <b>{{p.stammdatum.name}}</b>
+                      [ {{p.stammdatum.typ + ' ' + p.stammdatum.bezugsjahr}} ]
+                      <span class="fa fa-pencil" ng-click="openSelectStammdatum(p)"></span></i>
+                  </td>
+                  <td>
+                    <div class="form-group">
+                      <select class="form-control" name="fetchDetails" id="fetchDetails" ng-model="p.fetchdetails">
+                        <option value="default">Gleiches Jahr</option>
+                        <option value="previous">Vorheriges Jahr</option>
+                        <option value="base">Bezugsjahr</option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="background-color: whitesmoke; padding-top:10px; padding-left:30px">
+          <div class="col-md-12">
+            <i style="display: block; margin-bottom:10px; margin-top:20px">Hinweise:</i>
+
+            <p>Das Ergebnis muss der Variable 'result' zugewiesen werden.</p>
+
+            <p>Funktionenreferenz von <a href="http://mathjs.org/docs/expressions/syntax.html#operators"
+                                         target="_blank">mathjs</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" ng-show="stammdatenSet && resultSet">
+    <hr>
+    <div class="col-md-5">
+      <h2>Vorschau</h2>
+
+      <form class="form" action="" name="eval">
+        <div class="form-group">
+          <label for="scenario">Szenario:</label>
+          <select ng-model="selectedScenario" class="form-control" name="scenario" id="scenario">
+            <option ng-repeat="o in possibleScenarios" value="{{o.stelle}}">{{o.name}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="year">Jahr:</label>
+          <input id="year" class="form-control" type="number" ng-model="selectedYear"
+                 min="{{stammdatum? (stammdatum.bezugsjahr || getDerivedValue('bezugsjahr')) : 2000}}"
+                 max="{{stammdatum? getMaxYear() : 2999}}">
+
+          <p ng-show="!eval.$valid" style="color: #c9302c; margin-top: 5px">Für <b>{{stammdatum.name}}</b> können
+            nur Datensätze
+            {{(stammdatum.bezugsjahr || getDerivedValue('bezugsjahr')) === getMaxYear()? (' für ' +
+            getMaxYear())
+            : (' von ' + (stammdatum.bezugsjahr || getDerivedValue('bezugsjahr')) + ' bis ' + getMaxYear())}} angezeigt
+            werden.</p>
+        </div>
+      </form>
+      <br>
+      <button style="display: inline; margin-top: 15px" class="btn btn-primary" type="button"
+              ng-disabled="!isFormulaConstant && !(resultSet && stammdatenSet && selectedYear && selectedYear >= 2000 && selectedScenario && selectedScenario.length > 0)"
+              ng-click="calculateConcreteValues()">{{selectedYear? 'Vorschau für ' + selectedYear :
+        'Datensatzvorschau'}}
+      </button>
+    </div>
+    <!--We need to use ng-if instead of ng-show. Otherwise Dygraph won't render before the size gets changed manually-->
+    <div class="col-md-6 col-md-offset-1" ng-if="previewData">
+      <h2>Ergebnis</h2>
+      <zoomable-chart class="col-md-12"
+                      data="previewData"
+                      options="graphOptions"
+                      isforprint="false"
+      ></zoomable-chart>
+    </div>
+  </div>
+
+  <div class="row" ng-show="stammdatenSet && resultSet">
+    <hr>
+    <div class="col-md-12">
+      <h2>Speichern</h2>
+
+      <p><span class="fa fa-info-circle" style="color: #286090"></span> Wählen sie ein Start-Jahr aus und klicken sie
+        auf <b style="color: #286090">Definition speichern</b> um die obige Formel für das Start- und
+        alle folgenden Jahre zu speichern.</p>
+
+      <form action="" name="save">
+        <div class="form-group">
+          <label for="year" title="Ab welchem Jahr soll die Formel verwendet werden?">Start-Jahr:</label>
+          <input id="startyear" class="form-control" type="number" ng-model="startYear"
+                 min="{{stammdatum? (stammdatum.bezugsjahr || getDerivedValue('bezugsjahr')) : 2000}}"
+                 max="{{stammdatum? getMaxYear() : 2999}}">
+
+          <p ng-show="!save.$valid" style="color: #c9302c; margin-top: 5px">Für <b>{{stammdatum.name}}</b> können
+            nur Datensätze
+            {{(stammdatum.bezugsjahr || getDerivedValue('bezugsjahr')) === getMaxYear()? (' für ' +
+            getMaxYear())
+            : (' von ' + (stammdatum.bezugsjahr || getDerivedValue('bezugsjahr')) + ' bis ' + getMaxYear())}} definiert
+            werden.</p>
+        </div>
+        <button ng-if="!showOnly" style="margin-top: 15px" class="btn btn-primary"
+                ng-click="saveAlgebraicDataset()" ng-disabled="!resultSet || !stammdatenSet || !startYear">Definition
+          speichern
+        </button>
+        <div ng-if="staticDataAvailable" class="checkbox">
+          <label><input ng-model="cb.forceSave" type="checkbox">Statische Datensätze überschreiben</label>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

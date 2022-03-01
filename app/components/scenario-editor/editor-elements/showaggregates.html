@@ -1,0 +1,26 @@
+<div ng-if="aggregates">
+  <table ng-if="!isArray" class="table table-condensed" style="table-layout: fixed;">
+    <tr ng-repeat="(name,value) in aggregates">
+      <th>{{getAggregateLabel(name)}}:</th>
+      <td title="{{value}}">{{value | significantNumber:2}} {{definition.unit}}</td>
+    </tr>
+  </table>
+
+  <table ng-if="isArray" class="table table-condensed" style="table-layout: fixed;">
+    <tr>
+      <th style="border-top: none">Ergebnis ID:</th>
+      <th ng-repeat="id in Simulations.loadedResults" style="text-align:right; border-top: none">
+        {{id}}
+      </th>
+    </tr>
+    <tr ng-repeat="(name,values) in aggregates">
+      <th>{{getAggregateLabel(name)}}:</th>
+      <td ng-repeat="v in values track by $index"
+          title="{{isRelative ? v : (v - aggregates[name][0])}}"
+          ng-style="relativeValueStyle($index,v, name)"
+          ng-click="toggleRelative()">
+        {{getRenderValue($index, v, name, isRelative)}} {{definition.unit}}
+      </td>
+    </tr>
+  </table>
+</div>

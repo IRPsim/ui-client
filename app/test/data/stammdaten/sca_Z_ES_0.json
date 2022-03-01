@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "name": "IntegerScalar",
+  "typ": "sca_Z_ES_0",
+  "zeitintervall": "YEAR",
+  "abstrakt": false,
+  "referenz": null,
+  "szenarien": [
+    "Leme A",
+    "Leme B"
+  ],
+  "bezugsjahr": 2015,
+  "prognoseHorizont": 2,
+  "verantwortlicherPrognosejahr": {
+    "name": "Bar",
+    "email": "bar@test.de"
+  },
+  "verantwortlicherBezugsjahr": {
+    "name": "Foo",
+    "email": "foo@test.de"
+  }
+}

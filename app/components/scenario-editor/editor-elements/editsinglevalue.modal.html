@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h3 class="modal-title"><strong style="padding-left: 15px">Skalar auswählen</strong></h3>
+  <span style="padding-left: 15px">{{title}} - Bezugsjahr {{baseYear}} - Aktuelles Jahr {{currentYear}}</span>
+</div>
+
+
+<div class="modal-body">
+  <dataset-selector class="row"
+                    type="timeseriesType"
+                    on-select="addDatasets($items[0].seriesid)"
+                    base-year="{{baseYear}}"
+                    scenario="scenario"
+                    current-year="{{currentYear}}">
+
+  </dataset-selector>
+</div>
+
+<div class="modal-footer">
+  <div style="padding-left: 15px">
+    <button class="btn btn-danger pull-left" ng-click="cancel()">Abbrechen</button>
+  </div>
+</div>

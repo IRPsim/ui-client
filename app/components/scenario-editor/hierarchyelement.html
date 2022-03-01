@@ -1,0 +1,74 @@
+<div ng-if="selectedElement.set">
+  <edit-set-attributes type="{{type}}"
+                       tag="{{tag}}">
+  </edit-set-attributes>
+</div>
+<div ng-if="!selectedElement.set">
+  <edit-element ng-if="selectedElement.contents"
+                heading="{{selectedElement.label}}"
+                description="{{selectedElement.description}}"
+                callback="pinSelectedElement()">
+    <div
+      ng-repeat="content in selectedElement.contents | filter:definitionWithoutData(selectedElement,['timeseries','scalars','config','multiChart','graph','image']) track by $index"
+      class="row">
+      <div ng-if="content.type === 'multiChart'">
+        <result-selectedseriesplotter parameters="allTimeseries"
+                                      max-length="scenario.config.simulationlength"></result-selectedseriesplotter>
+      </div>
+      <div ng-if="content.type === 'graph'">
+        <graph scenario="scenario" model-type="{{type}}" graph-spec="content.graphSpec"></graph>
+      </div>
+      <div ng-if="content.type === 'image'">
+        <graph-image scenario="scenario" type="type" element="selectedElement"></graph-image>
+      </div>
+      <div ng-if="content.type!='multiChart'">
+        <strong class="col-md-2" uib-tooltip="{{getDefinition(content, scenario.config.modeldefinition).description}}">{{getDefinition(content, scenario.config.modeldefinition).identifier}}</strong>
+
+        <div class="col-md-10">
+          <edit-single-value definition="getDefinition(content, scenario.config.modeldefinition)"
+                             aggregates="findAggregates(content)"
+                             data="scenario[content.type][content.name]"
+                             location="[content.type, content.name]"
+                             validator="changeValidator(validationEvent)"
+                             element-name="{{getDefinition(content, scenario.config.modeldefinition).identifier}}"
+                             read-only="{{readOnly}}"
+                             length="{{scenario.config.simulationlength}}"
+                             timestep="{{scenario.config.timestep}}"
+                             base-year="{{multiYearScenario.years[0].config.year.value}}"
+                             scenario="scenario.config.scenario.value"
+                             current-year="{{scenario.config.year.value}}">
+          </edit-single-value>
+            <div ng-if="content.name === 'savelength'">
+                <input type="number" name="savelength" ng-model="scenario[content.type][content.name]"
+                       ng-min="{{2}}" ng-max="{{scenario.config.optimizationlength}}" required>
+            </div>
+	     <div ng-if="content.name === 'optimizationlength'">
+                <input type="number" name="optimizationlength" ng-model="scenario[content.type][content.name]"
+                       ng-min="{{2}}" ng-max="{{scenario.config.simulationlength}}" required>
+            </div>
+            <div ng-if="content.name === 'simulationstart'">
+              <input type="number" name="simulationstart" value="1"
+                   required disabled>
+            </div>
+            <div ng-if="content.name === 'simulationlength'">
+                <input type="number" name="simulationlength" ng-model="scenario[content.type][content.name]"
+                       required>
+            </div>
+          <div ng-if="content.name === 'resolution'">
+            <select ng-init="scenario[content.type][content.name] = scenario[content.type][content.name] || 35040"
+                    ng-model="scenario[content.type][content.name]" convert-to-number>
+              <option value="8760">8760</option>
+              <option value="35040">35040</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </edit-element>
+  <edit-element ng-if="!selectedElement.contents"
+                heading="{{selectedElement.label}}"
+                description="{{selectedElement.description}}"
+                callback="pinSelectedElement()">
+    <p>Bitte wählen sie im Baum eine Kategorie.</p>
+  </edit-element>
+</div>

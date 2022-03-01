@@ -1,0 +1,46 @@
+<div class="row"
+     style="margin-bottom: 10px">
+  <div style="margin-left: 10px">{{stammDatenName}}</div>
+  <zoomable-chart class="col-xs-11"
+                  series-names="series"
+                  simulation-ids="simulationIds"
+                  data="data"
+                  height="200"
+                  options="chartOptions"
+                  max-length="{{maxLength}}"
+                  timestep="{{coarseTimestep || timestep}}"
+                  series-group="{{seriesGroup}}"
+                  isforprint="isforprint"
+                  sensitivity="sensitivity"></zoomable-chart>
+  <div class="col-xs-1">
+    <div ng-if="!readOnly">
+      <a href="">
+        <span title="Datensatz aus Datenbank laden" class="fa fa-database hidden-print" ng-click="openFromDB()"></span>
+      </a>
+    </div>
+    <div ng-if="!readOnly">
+      <a href="">
+        <span title="Datensatz aus Excel kopieren" class="fa fa-file-excel-o hidden-print"
+              ng-click="openFromExcel()"></span>
+      </a>
+    </div>
+    <div ng-if="readOnly">
+      <a href="">
+        <span title="CSV-Export" class="fa fa-file-o hidden-print" ng-click="downloadResultsAsCSV()"></span>
+      </a>
+    </div>
+    <div>
+    <div ng-if="!readOnly">
+      <a href="">
+        <span title="Datensatz auf 0 setzen" class="fa fa-repeat hidden-print" ng-click="resetToZero()"></span>
+      </a>
+    </div>
+    <div ng-if="!readOnly && currentYear === baseYear">
+      <a href="">
+            <span ng-style="{color: sensitivity? 'green' : 'default'}"
+                  title="Sensitivität festlegen" class="hidden-print fa fa-sliders"
+                  ng-click="onSensitivityClick()"></span>
+      </a>
+    </div>
+  </div>
+</div>

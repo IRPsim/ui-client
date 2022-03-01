@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h3 class="modal-title">Stammdaten importieren</h3>
+</div>
+
+<div class="modal-body container">
+    <form name="importMasterDataForm">
+      <div class="row">
+        <div id="importFile"
+            style="border: 2px dashed grey; height:125px; width: 100%; display:inline-block; text-align: center;"
+            ngf-drop ngf-select ng-model="importFile" ngf-multiple="false" ngf-allow-dir="false" ngf-pattern="'.json,.sds,.zip'">
+        <div style="color:grey; font-size: 12px; margin-top: 20px">
+          <p>Datei(en) per Drag'n'Drop ablegen<br/>oder<br/> hier klicken für Auswahldiaglog</p>
+          <p ng-if="vm.validFile">
+            <span>Ausgewählte Datei: <b><em>{{importFile.name}} - {{vm.humanFileSize(importFile.size, false)}}</em></b></span>
+            <span ng-if="vm.isUploading">({{importFile.progress }} % übertragen)</span>
+            <span ng-if="importFile.error">(Es ist ein Fehler aufgetreten)</span>
+          </p>
+          <p ng-if="importMasterDataForm.$error.pattern">
+            Es werden nur Dateien vom Typ <code>*.json</code>,<code>*.zip</code> und <code>*.sds</code> unterstützt.
+          </p>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal-footer">
+  <button ng-disabled="!vm.validFile || vm.isUploading || vm.isLargeFile(importFile)" class="btn btn-primary" type="button" ng-click="vm.import()">{{vm.isUploading?"Lade hoch...":"Start"}}</button>
+  <button class="btn btn-warning" type="button" ng-click="vm.cancel()">Abbrechen</button>
+</div>
+
+

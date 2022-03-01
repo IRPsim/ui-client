@@ -1,0 +1,15 @@
+<tags-input ng-model="selectedTags"
+            class="ade-tag-input"
+            min-length="1"
+            replace-spaces-with-dashes="false"
+            tabindex="1"
+            enable-editing-last-tag="true"
+            placeholder="{{placeholder}}"
+            add-from-autocomplete-only="false">
+  <auto-complete source="query($query)"
+                 min-length="1"
+                 load-on-empty="true"
+                 load-on-focus="false"
+                 debounce-delay="500">
+  </auto-complete>
+</tags-input>

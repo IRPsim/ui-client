@@ -1,0 +1,112 @@
+<h1>Verwaltung von Prognoseszenarien</h1>
+
+<div class="row" style="margin-top:50px" ng-cloak>
+  <div class="col-md-12">
+    <p style="color: grey;">Anzahl aktuell vorhandener Prognoseszenarien: <b>{{scenarios? scenarios.length:
+      0}}</b></p>
+
+    <div class="table-responsive" style="max-height: 500px; margin-bottom:50px">
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th class="col-md-2">Bezugsjahr</th>
+          <th class="col-md-10" colspan="2">Szenarien</th>
+        </tr>
+        <tr ng-repeat="set in scenarios">
+
+          <!--If not editing-->
+          <td class="col-md-2">
+            {{set.jahr}}
+          </td>
+
+          <td class="col-md-10" colspan="2" ng-if="!set.edit">
+            {{getScenarioString(set)}}
+
+            <a ng-hide="isEditing" class="pull-right"
+               style="margin-right:5px; margin-top: 2px; text-decoration: none; color: rgb(217, 83, 79); cursor: pointer"
+               title="Szenarioset löschen">
+              <i class="fa fa-remove pull-right" ng-confirmed-click="removeScenarioSet(set)"
+                 ng-confirmed-click-message="Wollen sie diese Prognoseszenarien wirklich löschen?"></i>
+            </a>
+            <a ng-hide="isEditing" class="pull-right" style="margin-right:5px; text-decoration: none; cursor: pointer"
+               title="Szenarioset bearbeiten">
+              <i class="fa fa-pencil" ng-click="editScenarioSet(set)"></i>
+            </a>
+
+          </td>
+
+          <!--If editing-->
+          <td class="col-md-8" ng-if="set.edit">
+            <table class="table">
+              <tr>
+                <th>Stelle</th>
+                <th>Szenario</th>
+                <th></th>
+              </tr>
+              <tr ng-repeat="scenario in set.editScenarios track by $index">
+                <td>
+                  <input class="form-control" type="number" ng-model="scenario.stelle">
+                </td>
+                <td>
+                  <input class="form-control" type="text" ng-model="scenario.name">
+                </td>
+                <td>
+                  <a class="pull-right"
+                     style="margin-right:5px; margin-top: 9px; text-decoration: none;cursor: pointer; color: rgb(217, 83, 79)"
+                     title="Szenario löschen">
+                    <i class="fa fa-remove pull-right" ng-click="deleteScenario(set, scenario)"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input class="form-control focusedInput" type="number" ng-model="newScenario[set.jahr].stelle" placeholder="Stelle">
+                </td>
+                <td>
+                  <input class="form-control focusedInput" type="text" ng-model="newScenario[set.jahr].name" placeholder="Name des Szenarios">
+                </td>
+                <td>
+                  <a class="pull-right"
+                     style="margin-right:5px; margin-top: 9px; text-decoration: none;cursor: pointer"
+                     title="Szenario hinzufügen">
+                    <i class="fa fa-plus pull-right" ng-click="addScenario(set, newScenario[set.jahr])"></i>
+                  </a>
+                </td>
+              </tr>
+
+            </table>
+          </td>
+          <td class="col-md-2" ng-if="set.edit">
+            <a class="pull-right"
+               style="margin-right:5px; margin-top: 9px; text-decoration: none;cursor: pointer;"
+               title="Änderungen verwerfen">
+              <i class="fa fa-reply pull-right" ng-click="cancelChangesForScenarioSet(set)"></i>
+            </a>
+            <a ng-if="set.edit" class="pull-right"
+               style="margin-right:5px; margin-top: 7px; text-decoration: none; cursor: pointer"
+               title="Änderungen speichern">
+              <i class="fa fa-save" ng-click="saveChangesForScenarioSet(set)"></i>
+            </a>
+          </td>
+
+
+        </tr>
+        <tr>
+          <td class="col-md-2">
+            <input placeholder="{{currYear}}" class="form-control" type="number" ng-model="bezugsjahr">
+          </td>
+          <td class="col-md-9">
+            <tags-input replace-spaces-with-dashes="false"
+                        placeholder="Um ein Szenario hinzuzufügen geben sie dessen Namen ein und drücken sie Enter."
+                        ng-model="szenarien"></tags-input>
+          </td>
+          <td class="col-md-1">
+            <button class="btn btn-primary pull-right" ng-click="addScenarios(bezugsjahr, szenarien)">Hinzufügen
+            </button>
+          </td>
+        </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>
