@@ -24,7 +24,7 @@
     "ngDraggable": "~0.1.8",
     "mathjs": "^3.0.0",
     "dygraphs": "1.1.1",
-    "ui-common": "gitolite3@irpsim.uni-leipzig.de:ui-common.git#master",
+    "ui-common": "https://github.com/IRPsim/ui-common.git#main",
     "ng-tags-input": "3.1.1",
     "ng-file-upload": "~12.0.4",
     "angular-ui-grid": "4.8.1",
