@@ -26,7 +26,7 @@ module.exports = function (grunt) {
   var devMiddleware = function (connect) {
     return [
       // Setup the proxy
-      require('grunt-connect-proxy/lib/utils').proxyRequest,
+      require('grunt-connect-proxy-updated/lib/utils').proxyRequest,
       serveStatic('.tmp'),
       connect().use(
         '/bower_components',
@@ -135,7 +135,7 @@ module.exports = function (grunt) {
           middleware: function () {
             return [
               // Setup the proxy
-              require('grunt-connect-proxy/lib/utils').proxyRequest,
+              require('grunt-connect-proxy-updated/lib/utils').proxyRequest,
               serveStatic('./dist')
             ];
           }
